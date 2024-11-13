@@ -2,7 +2,6 @@
 using MediatR;
 using POS.Application.Commons.Bases;
 using POS.Application.Dtos.DocumentType.Response;
-using POS.Application.Dtos.DocumentType.Response;
 using POS.Application.Interfaces.Services;
 using POS.Utilities.Static;
 using WatchDog;

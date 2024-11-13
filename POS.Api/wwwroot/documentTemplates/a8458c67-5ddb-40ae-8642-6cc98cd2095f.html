@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cotización</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 800px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+      }
+      .header,
+      .footer {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .header h1,
+      .footer p {
+        margin: 0;
+      }
+      .client-info,
+      .quote-info {
+        margin-bottom: 20px;
+      }
+      .client-info p,
+      .quote-info p {
+        margin: 5px 0;
+      }
+      .details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      .details-table th,
+      .details-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+      .details-table th {
+        background-color: #f0f0f0;
+      }
+      .summary {
+        width: 100%;
+        margin-top: 20px;
+      }
+      .summary p {
+        margin: 5px 0;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Cotización No. {{quoteNumber}}</h1>
+        <p>CustomCodeCR - {{website}}</p>
+        <p>{{companyAddress}}</p>
+        <p>Tel: {{companyPhone}}</p>
+      </div>
+
+      <div class="client-info">
+        <p><strong>Cliente:</strong> {{clientName}}</p>
+        <p><strong>Dirección:</strong> {{clientAddress}}</p>
+        <p><strong>Código Postal:</strong> {{clientPostalCode}}</p>
+        <p><strong>Fecha de Solicitud:</strong> {{requestDate}}</p>
+      </div>
+
+      <div class="quote-info">
+        <p><strong>Número de Cliente:</strong> {{clientNumber}}</p>
+        <p><strong>Solicitado por:</strong> {{requestedBy}}</p>
+        <p><strong>Condiciones de Pago:</strong> {{paymentTerms}}</p>
+        <p><strong>Método de Pago:</strong> {{paymentMethod}}</p>
+      </div>
+
+      <table class="details-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Precio / Unidad</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se generarán dinámicamente las filas de productos -->
+          {{#each items}}
+          <tr>
+            <td>{{this.product}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.unitPrice}}</td>
+            <td>{{this.totalPrice}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <div class="summary">
+        <p><strong>Subtotal:</strong> {{subtotal}}</p>
+        <p>
+          <strong>Descuento ({{discountRate}}%):</strong> {{discountAmount}}
+        </p>
+        <p><strong>Total:</strong> {{total}}</p>
+      </div>
+
+      <div class="footer">
+        <p>{{additionalNotes}}</p>
+        <p>
+          Si tiene alguna duda sobre esta cotización, no dude en comunicarse con
+          nosotros.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

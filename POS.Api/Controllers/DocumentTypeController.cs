@@ -21,7 +21,7 @@ public class DocumentTypeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeparmentList([FromQuery] GetAllDocumentTypeQuery query)
+    public async Task<IActionResult> DocumentTypeList([FromQuery] GetAllDocumentTypeQuery query)
     {
         var response = await _mediator.Send(query);
         return Ok(response);
@@ -42,7 +42,7 @@ public class DocumentTypeController : ControllerBase
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> DeparmentCreate([FromBody] CreateDocumentTypeCommand command)
+    public async Task<IActionResult> DocumentTypeCreate([FromBody] CreateDocumentTypeCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

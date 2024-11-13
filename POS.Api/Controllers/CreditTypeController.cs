@@ -21,7 +21,7 @@ public class CreditTypeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeparmentList([FromQuery] GetAllCreditTypeQuery query)
+    public async Task<IActionResult> CreditTypeList([FromQuery] GetAllCreditTypeQuery query)
     {
         var response = await _mediator.Send(query);
         return Ok(response);
@@ -42,7 +42,7 @@ public class CreditTypeController : ControllerBase
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> DeparmentCreate([FromBody] CreateCreditTypeCommand command)
+    public async Task<IActionResult> CreditTypeCreate([FromBody] CreateCreditTypeCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

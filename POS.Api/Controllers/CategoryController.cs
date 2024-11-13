@@ -21,7 +21,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeparmentList([FromQuery] GetAllCategoryQuery query)
+    public async Task<IActionResult> CategoryList([FromQuery] GetAllCategoryQuery query)
     {
         var response = await _mediator.Send(query);
         return Ok(response);
@@ -42,7 +42,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> DeparmentCreate([FromBody] CreateCategoryCommand command)
+    public async Task<IActionResult> CategoryCreate([FromBody] CreateCategoryCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

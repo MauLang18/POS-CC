@@ -25,10 +25,10 @@ public class GetSelectDocumentTypeHandler : IRequestHandler<GetSelectDocumentTyp
 
         try
         {
-            var creditTypes = await _unitOfWork.CreditType.GetSelectAsync();
+            var documentTypes = await _unitOfWork.DocumentType.GetSelectAsync();
 
             response.IsSuccess = true;
-            response.Data = _mapper.Map<IEnumerable<SelectResponse>>(creditTypes);
+            response.Data = _mapper.Map<IEnumerable<SelectResponse>>(documentTypes);
             response.Message = ReplyMessage.MESSAGE_QUERY;
         }
         catch (Exception ex)

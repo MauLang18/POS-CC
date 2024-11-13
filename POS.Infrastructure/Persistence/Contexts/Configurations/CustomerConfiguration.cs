@@ -26,7 +26,11 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasMaxLength(100)
             .IsUnicode(false);
         builder.Property(x => x.DiscountPercent)
-            .HasPrecision(3, 2);
+            .HasPrecision(5, 2);
+        builder.Property(x => x.CreditInterestRate)
+            .HasPrecision(5, 2);
+        builder.Property(x => x.CreditLimit)
+            .HasPrecision(12, 2);
         builder.HasOne(x => x.DocumentType)
             .WithMany(y => y.Customers)
             .HasForeignKey(x => x.DocumentTypeId)

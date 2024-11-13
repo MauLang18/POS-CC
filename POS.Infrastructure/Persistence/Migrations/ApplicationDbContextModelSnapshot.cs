@@ -144,17 +144,19 @@ namespace POS.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("CreditInterestRate")
-                        .HasColumnType("numeric");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
 
                     b.Property<decimal>("CreditLimit")
-                        .HasColumnType("numeric");
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)");
 
                     b.Property<int>("CreditTypeId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("DiscountPercent")
-                        .HasPrecision(3, 2)
-                        .HasColumnType("numeric(3,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
 
                     b.Property<string>("DocumentNumber")
                         .IsRequired()
@@ -451,7 +453,7 @@ namespace POS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductServiceId");
 
-                    b.ToTable("InvoicesDetail");
+                    b.ToTable("InvoicesDetails");
                 });
 
             modelBuilder.Entity("POS.Domain.Entities.License", b =>
@@ -668,7 +670,7 @@ namespace POS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("ProductService");
+                    b.ToTable("ProductServices");
                 });
 
             modelBuilder.Entity("POS.Domain.Entities.Project", b =>
