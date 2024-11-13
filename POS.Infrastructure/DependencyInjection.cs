@@ -26,11 +26,12 @@ public static class DependencyInjection
         services.AddScoped<IQuoteDetailRepository, QuoteDetailRepository>();
         services.AddScoped<ISaleDetailRepository, SaleDetailRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICodeRepository, CodeRepository>();
 
         services.AddTransient<IOrderingQuery, OrderingQuery>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddTransient<IFileStorageService, FileStorageService>();
-        //services.AddTransient<IGenerateCodeService, GenerateCodeService>();
+        services.AddTransient<IGenerateCodeService, GenerateCodeService>();
         //services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IGenerateExcelService, GenerateExcelService>();
         //services.AddTransient<IGeneratePdfService, GeneratePdfService>();

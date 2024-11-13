@@ -12,7 +12,7 @@ public class ProductServiceConfiguration : IEntityTypeConfiguration<ProductServi
         builder.Property(x => x.Id)
             .HasColumnName("ProductServiceId");
         builder.Property(x => x.Code)
-            .HasMaxLength(7)
+            .HasMaxLength(10)
             .IsUnicode(false);
         builder.Property(x => x.Name)
             .HasMaxLength(50)

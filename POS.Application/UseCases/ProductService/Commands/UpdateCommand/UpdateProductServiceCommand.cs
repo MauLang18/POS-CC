@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using POS.Application.Commons.Bases;
 
-namespace POS.Application.UseCases.ProductService.Commands.CreateCommand;
+namespace POS.Application.UseCases.ProductService.Commands.UpdateCommand;
 
-public class CreateProductServiceCommand : IRequest<BaseResponse<bool>>
+public class UpdateProductServiceCommand : IRequest<BaseResponse<bool>>
 {
+    public int ProductServiceId { get; set; }
     public string Name { get; set; } = null!;
     public IFormFile? Image { get; set; }
     public string? Description { get; set; }
