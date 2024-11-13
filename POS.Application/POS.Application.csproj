@@ -22,4 +22,9 @@
 		<ProjectReference Include="..\POS.Utilities\POS.Utilities.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="UseCases\Quote\Commands\CreateCommand\" />
+	  <Folder Include="UseCases\Quote\Queries\GetAllQuery\" />
+	</ItemGroup>
+
 </Project>
