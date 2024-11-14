@@ -9,11 +9,11 @@ using POS.Infrastructure.Persistence.Contexts;
 
 #nullable disable
 
-namespace POS.Infrastructure.Persistence.Migrations
+namespace POS.Infrastructure.Persistence.migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241113222619_Code")]
-    partial class Code
+    [Migration("20241114144305_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -145,6 +145,10 @@ namespace POS.Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("AuditUpdateUser")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<decimal>("CreditInterestRate")
                         .HasPrecision(5, 2)
@@ -862,6 +866,10 @@ namespace POS.Infrastructure.Persistence.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("Discount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
                     b.Property<decimal>("IVA")
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)");
@@ -869,6 +877,9 @@ namespace POS.Infrastructure.Persistence.Migrations
                     b.Property<string>("Observation")
                         .IsUnicode(false)
                         .HasColumnType("text");
+
+                    b.Property<int>("PaymentMethodId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("State")
                         .HasColumnType("integer");
@@ -896,6 +907,8 @@ namespace POS.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("StatusId");
 
@@ -1528,6 +1541,12 @@ namespace POS.Infrastructure.Persistence.Migrations
                         .HasForeignKey("CustomerId")
                         .IsRequired();
 
+                    b.HasOne("POS.Domain.Entities.PaymentMethod", "PaymentMethod")
+                        .WithMany("Quotes")
+                        .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
                     b.HasOne("POS.Domain.Entities.Status", "Status")
                         .WithMany("Quotes")
                         .HasForeignKey("StatusId")
@@ -1539,6 +1558,8 @@ namespace POS.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+
+                    b.Navigation("PaymentMethod");
 
                     b.Navigation("Status");
 
@@ -1668,6 +1689,8 @@ namespace POS.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("POS.Domain.Entities.PaymentMethod", b =>
                 {
                     b.Navigation("Invoices");
+
+                    b.Navigation("Quotes");
                 });
 
             modelBuilder.Entity("POS.Domain.Entities.ProductService", b =>

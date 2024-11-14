@@ -17,9 +17,13 @@ public class QuoteMapping : Profile
 
         CreateMap<Quote, QuoteByIdResponseDto>()
             .ForMember(x => x.QuoteId, x => x.MapFrom(y => y.Id))
-            .ForMember(x => x.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
-            .ForMember(x => x.CustomerAddress, opt => opt.MapFrom(src => src.Customer.Address))
-            .ForMember(x => x.CustomerPhone, opt => opt.MapFrom(src => src.Customer.Phone))
+            .ForMember(x => x.CustomerName, x => x.MapFrom(y => y.Customer.Name))
+            .ForMember(x => x.CustomerAddress, x => x.MapFrom(y => y.Customer.Address))
+            .ForMember(x => x.CustomerPhone, x => x.MapFrom(y => y.Customer.Phone))
+            .ForMember(x => x.PaymentMethod, x => x.MapFrom(y => y.PaymentMethod.Name))
+            .ForMember(x => x.PaymentTerms, x => x.MapFrom(y => y.Customer.CreditType.Name))
+            .ForMember(x => x.RequestedBy, x => x.MapFrom(y => y.Customer.ContactName))
+            .ForMember(x => x.AuditCreateDate, x => x.MapFrom(y => y.AuditCreateDate.ToString("yyyy-MM-dd"))) // Solo fecha
             .ReverseMap();
 
         CreateMap<QuoteDetail, QuoteDetailsByIdResponseDto>()

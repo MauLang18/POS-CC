@@ -6,31 +6,32 @@ using POS.Utilities.Static;
 using WatchDog;
 using Entity = POS.Domain.Entities;
 
-namespace POS.Application.UseCases.PaymentMethod.Commands.CreateCommand;
+namespace POS.Application.UseCases.PaymentMethod.Commands.UpdateCommand;
 
-public class CreatePaymentMethodHandler : IRequestHandler<CreatePaymentMethodCommand, BaseResponse<bool>>
+public class UpdatePaymentMethodHandler : IRequestHandler<UpdatePaymentMethodCommand, BaseResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreatePaymentMethodHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public UpdatePaymentMethodHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task<BaseResponse<bool>> Handle(CreatePaymentMethodCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse<bool>> Handle(UpdatePaymentMethodCommand request, CancellationToken cancellationToken)
     {
         var response = new BaseResponse<bool>();
 
         try
         {
             var paymentMethod = _mapper.Map<Entity.PaymentMethod>(request);
-            await _unitOfWork.PaymentMethod.CreateAsync(paymentMethod);
+            paymentMethod.Id = request.PaymentMethodId;
+            _unitOfWork.PaymentMethod.UpdateAsync(paymentMethod);
             await _unitOfWork.SaveChangesAsync();
 
             response.IsSuccess = true;
-            response.Message = ReplyMessage.MESSAGE_SAVE;
+            response.Message = ReplyMessage.MESSAGE_UPDATE;
         }
         catch (Exception ex)
         {

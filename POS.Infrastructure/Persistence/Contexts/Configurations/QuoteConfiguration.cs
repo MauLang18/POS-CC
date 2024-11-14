@@ -39,6 +39,6 @@ public class QuoteConfiguration : IEntityTypeConfiguration<Quote>
         builder.HasOne(x => x.PaymentMethod)
             .WithMany(y => y.Quotes)
             .HasForeignKey(x => x.PaymentMethodId)
-            .OnDelete(DeleteBehavior.ClientSetNull);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

@@ -22,9 +22,4 @@
 		<ProjectReference Include="..\POS.Utilities\POS.Utilities.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="UseCases\PaymentMethod\Commands\DeleteCommand\" />
-	  <Folder Include="UseCases\PaymentMethod\Commands\UpdateCommand\" />
-	</ItemGroup>
-
 </Project>

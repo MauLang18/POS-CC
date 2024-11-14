@@ -4,10 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace POS.Infrastructure.Persistence.Migrations
+namespace POS.Infrastructure.Persistence.migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -232,12 +232,13 @@ namespace POS.Infrastructure.Persistence.Migrations
                     DocumentNumber = table.Column<string>(type: "character varying(15)", unicode: false, maxLength: 15, nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: true),
+                    ContactName = table.Column<string>(type: "text", nullable: false),
                     Phone = table.Column<string>(type: "character varying(25)", unicode: false, maxLength: 25, nullable: true),
                     Address = table.Column<string>(type: "text", unicode: false, nullable: true),
                     CreditTypeId = table.Column<int>(type: "integer", nullable: false),
-                    DiscountPercent = table.Column<decimal>(type: "numeric(3,2)", precision: 3, scale: 2, nullable: false),
-                    CreditInterestRate = table.Column<decimal>(type: "numeric", nullable: false),
-                    CreditLimit = table.Column<decimal>(type: "numeric", nullable: false),
+                    DiscountPercent = table.Column<decimal>(type: "numeric(5,2)", precision: 5, scale: 2, nullable: false),
+                    CreditInterestRate = table.Column<decimal>(type: "numeric(5,2)", precision: 5, scale: 2, nullable: false),
+                    CreditLimit = table.Column<decimal>(type: "numeric(12,2)", precision: 12, scale: 2, nullable: false),
                     AuditCreateUser = table.Column<int>(type: "integer", nullable: false),
                     AuditCreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AuditUpdateUser = table.Column<int>(type: "integer", nullable: true),
@@ -347,12 +348,12 @@ namespace POS.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductService",
+                name: "ProductServices",
                 columns: table => new
                 {
                     ProductServiceId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "character varying(7)", unicode: false, maxLength: 7, nullable: false),
+                    Code = table.Column<string>(type: "character varying(10)", unicode: false, maxLength: 10, nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
                     Image = table.Column<string>(type: "text", unicode: false, nullable: true),
                     Description = table.Column<string>(type: "text", unicode: false, nullable: true),
@@ -371,14 +372,14 @@ namespace POS.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductService", x => x.ProductServiceId);
+                    table.PrimaryKey("PK_ProductServices", x => x.ProductServiceId);
                     table.ForeignKey(
-                        name: "FK_ProductService_Categories_CategoryId",
+                        name: "FK_ProductServices_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId");
                     table.ForeignKey(
-                        name: "FK_ProductService_Units_UnitId",
+                        name: "FK_ProductServices_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
                         principalColumn: "UnitId");
@@ -434,10 +435,12 @@ namespace POS.Infrastructure.Persistence.Migrations
                     VoucherTypeId = table.Column<int>(type: "integer", nullable: false),
                     VoucherNumber = table.Column<string>(type: "character varying(10)", unicode: false, maxLength: 10, nullable: false),
                     CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    PaymentMethodId = table.Column<int>(type: "integer", nullable: false),
                     Observation = table.Column<string>(type: "text", unicode: false, nullable: true),
                     SubTotal = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
                     ApplyIVA = table.Column<int>(type: "integer", nullable: false),
                     IVA = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    Discount = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
                     Total = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
                     StatusId = table.Column<int>(type: "integer", nullable: false),
                     AuditCreateUser = table.Column<int>(type: "integer", nullable: false),
@@ -456,6 +459,12 @@ namespace POS.Infrastructure.Persistence.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId");
+                    table.ForeignKey(
+                        name: "FK_Quotes_PaymentMethods_PaymentMethodId",
+                        column: x => x.PaymentMethodId,
+                        principalTable: "PaymentMethods",
+                        principalColumn: "PaymentMethodId",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Quotes_Statuses_StatusId",
                         column: x => x.StatusId,
@@ -546,9 +555,9 @@ namespace POS.Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_QuoteDetails", x => new { x.QuoteId, x.ProductServiceId });
                     table.ForeignKey(
-                        name: "FK_QuoteDetails_ProductService_ProductServiceId",
+                        name: "FK_QuoteDetails_ProductServices_ProductServiceId",
                         column: x => x.ProductServiceId,
-                        principalTable: "ProductService",
+                        principalTable: "ProductServices",
                         principalColumn: "ProductServiceId");
                     table.ForeignKey(
                         name: "FK_QuoteDetails_Quotes_QuoteId",
@@ -626,9 +635,9 @@ namespace POS.Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_PurchaseDetails", x => new { x.PurchaseId, x.ProductServiceId });
                     table.ForeignKey(
-                        name: "FK_PurchaseDetails_ProductService_ProductServiceId",
+                        name: "FK_PurchaseDetails_ProductServices_ProductServiceId",
                         column: x => x.ProductServiceId,
-                        principalTable: "ProductService",
+                        principalTable: "ProductServices",
                         principalColumn: "ProductServiceId");
                     table.ForeignKey(
                         name: "FK_PurchaseDetails_Purchases_PurchaseId",
@@ -704,9 +713,9 @@ namespace POS.Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_SaleDetails", x => new { x.SaleId, x.ProductServiceId });
                     table.ForeignKey(
-                        name: "FK_SaleDetails_ProductService_ProductServiceId",
+                        name: "FK_SaleDetails_ProductServices_ProductServiceId",
                         column: x => x.ProductServiceId,
-                        principalTable: "ProductService",
+                        principalTable: "ProductServices",
                         principalColumn: "ProductServiceId");
                     table.ForeignKey(
                         name: "FK_SaleDetails_Sales_SaleId",
@@ -716,7 +725,7 @@ namespace POS.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvoicesDetail",
+                name: "InvoicesDetails",
                 columns: table => new
                 {
                     InvoiceId = table.Column<int>(type: "integer", nullable: false),
@@ -727,16 +736,16 @@ namespace POS.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvoicesDetail", x => new { x.InvoiceId, x.ProductServiceId });
+                    table.PrimaryKey("PK_InvoicesDetails", x => new { x.InvoiceId, x.ProductServiceId });
                     table.ForeignKey(
-                        name: "FK_InvoicesDetail_Invoices_InvoiceId",
+                        name: "FK_InvoicesDetails_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalTable: "Invoices",
                         principalColumn: "InvoceId");
                     table.ForeignKey(
-                        name: "FK_InvoicesDetail_ProductService_ProductServiceId",
+                        name: "FK_InvoicesDetails_ProductServices_ProductServiceId",
                         column: x => x.ProductServiceId,
-                        principalTable: "ProductService",
+                        principalTable: "ProductServices",
                         principalColumn: "ProductServiceId");
                 });
 
@@ -781,8 +790,8 @@ namespace POS.Infrastructure.Persistence.Migrations
                 column: "VoucherTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoicesDetail_ProductServiceId",
-                table: "InvoicesDetail",
+                name: "IX_InvoicesDetails_ProductServiceId",
+                table: "InvoicesDetails",
                 column: "ProductServiceId");
 
             migrationBuilder.CreateIndex(
@@ -796,13 +805,13 @@ namespace POS.Infrastructure.Persistence.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductService_CategoryId",
-                table: "ProductService",
+                name: "IX_ProductServices_CategoryId",
+                table: "ProductServices",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductService_UnitId",
-                table: "ProductService",
+                name: "IX_ProductServices_UnitId",
+                table: "ProductServices",
                 column: "UnitId");
 
             migrationBuilder.CreateIndex(
@@ -839,6 +848,11 @@ namespace POS.Infrastructure.Persistence.Migrations
                 name: "IX_Quotes_CustomerId",
                 table: "Quotes",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Quotes_PaymentMethodId",
+                table: "Quotes",
+                column: "PaymentMethodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Quotes_StatusId",
@@ -896,7 +910,7 @@ namespace POS.Infrastructure.Persistence.Migrations
                 name: "EmailTemplates");
 
             migrationBuilder.DropTable(
-                name: "InvoicesDetail");
+                name: "InvoicesDetails");
 
             migrationBuilder.DropTable(
                 name: "Licenses");
@@ -926,10 +940,7 @@ namespace POS.Infrastructure.Persistence.Migrations
                 name: "Purchases");
 
             migrationBuilder.DropTable(
-                name: "ProductService");
-
-            migrationBuilder.DropTable(
-                name: "PaymentMethods");
+                name: "ProductServices");
 
             migrationBuilder.DropTable(
                 name: "Sales");
@@ -951,6 +962,9 @@ namespace POS.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "PaymentMethods");
 
             migrationBuilder.DropTable(
                 name: "Statuses");

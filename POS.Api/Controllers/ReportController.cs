@@ -19,10 +19,9 @@ public class ReportController : ControllerBase
         _generatePdfService = generatePdfService;
     }
 
-    [HttpGet("Pdf/{quoteId:int}")]
+    [HttpGet("Cotizacion/{quoteId:int}")]
     public async Task<IActionResult> QuotePdf(int quoteId)
     {
-        // Obtener la cotización usando MediatR
         var response = await _mediator.Send(new GetQuoteByIdQuery { QuoteId = quoteId });
 
         if (!response.IsSuccess || response.Data == null)
@@ -30,9 +29,23 @@ public class ReportController : ControllerBase
             return NotFound(new { Message = $"No se encontró una cotización con el ID {quoteId}" });
         }
 
-        // Generar el PDF usando el método genérico con el tipo especificado
         byte[] file = await _generatePdfService.GeneratePdf<QuoteByIdResponseDto>(response.Data, 1);
 
-        return File(file, "application/pdf", $"Quote-{quoteId}.pdf");
+        return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
     }
+
+    //[HttpGet("Factura/{quoteId:int}")]
+    //public async Task<IActionResult> InvoicePdf(int invoiceId)
+    //{
+    //    var response = await _mediator.Send(new GetInvoiceByIdQuery { InvoiceId = invoiceId });
+
+    //    if (!response.IsSuccess || response.Data == null)
+    //    {
+    //        return NotFound(new { Message = $"No se encontró una factura con el ID {invoiceId}" });
+    //    }
+
+    //    byte[] file = await _generatePdfService.GeneratePdf<InvoiceByIdResponseDto>(response.Data, 1);
+
+    //    return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
+    //}
 }

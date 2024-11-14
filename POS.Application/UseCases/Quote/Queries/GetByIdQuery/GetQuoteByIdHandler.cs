@@ -4,7 +4,6 @@ using POS.Application.Commons.Bases;
 using POS.Application.Dtos.Quote.Response;
 using POS.Application.Interfaces.Services;
 using POS.Application.UseCases.Quote.Queries.GetByIdQuery;
-using POS.Domain.Entities;
 using POS.Utilities.Static;
 using WatchDog;
 
@@ -35,14 +34,28 @@ public class GetQuoteByIdHandler : IRequestHandler<GetQuoteByIdQuery, BaseRespon
             }
 
             var customer = await _unitOfWork.Customer.GetByIdAsync(quote.CustomerId);
-
             if (customer != null)
             {
                 quote.Customer = customer;
+
+                var creditType = await _unitOfWork.CreditType.GetByIdAsync(customer.CreditTypeId);
+                if (creditType != null)
+                {
+                    quote.Customer.CreditType = creditType;
+                }
+            }
+
+            var paymentMethod = await _unitOfWork.PaymentMethod.GetByIdAsync(quote.PaymentMethodId);
+            if (paymentMethod != null)
+            {
+                quote.PaymentMethod = paymentMethod;
             }
 
             var quoteDetails = await _unitOfWork.QuoteDetail.GetQuoteDetailByQuoteId(request.QuoteId);
             quote.QuoteDetails = quoteDetails.ToList();
+
+            // Formatear la fecha de creación sin la hora
+            quote.AuditCreateDate = quote.AuditCreateDate.Date; // Solo conserva la fecha
 
             response.IsSuccess = true;
             response.Data = _mapper.Map<QuoteByIdResponseDto>(quote);

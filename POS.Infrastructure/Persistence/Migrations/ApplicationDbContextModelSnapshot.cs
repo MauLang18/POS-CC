@@ -8,7 +8,7 @@ using POS.Infrastructure.Persistence.Contexts;
 
 #nullable disable
 
-namespace POS.Infrastructure.Persistence.Migrations
+namespace POS.Infrastructure.Persistence.migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -1541,6 +1541,7 @@ namespace POS.Infrastructure.Persistence.Migrations
                     b.HasOne("POS.Domain.Entities.PaymentMethod", "PaymentMethod")
                         .WithMany("Quotes")
                         .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("POS.Domain.Entities.Status", "Status")
