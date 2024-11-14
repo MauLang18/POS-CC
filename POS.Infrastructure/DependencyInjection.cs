@@ -32,7 +32,7 @@ public static class DependencyInjection
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddTransient<IFileStorageService, FileStorageService>();
         services.AddTransient<IGenerateCodeService, GenerateCodeService>();
-        //services.AddTransient<IEmailService, EmailService>();
+        services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IGenerateExcelService, GenerateExcelService>();
         services.AddTransient<IGeneratePdfService, GeneratePdfService>();
 

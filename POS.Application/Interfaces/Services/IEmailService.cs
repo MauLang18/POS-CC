@@ -2,5 +2,5 @@
 
 public interface IEmailService
 {
-    Task SendEmailWithAttachmentAsync(string recipientEmail, byte[] pdfBytes, string subject, string htmlTemplate);
+    Task SendEmail<T>(T data, int templateId, byte[] pdfBytes, string customer, string pdf);
 }

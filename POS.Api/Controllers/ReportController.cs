@@ -12,11 +12,13 @@ public class ReportController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IGeneratePdfService _generatePdfService;
+    private readonly IEmailService _emailService;
 
-    public ReportController(IMediator mediator, IGeneratePdfService generatePdfService)
+    public ReportController(IMediator mediator, IGeneratePdfService generatePdfService, IEmailService emailService)
     {
         _mediator = mediator;
         _generatePdfService = generatePdfService;
+        _emailService = emailService;
     }
 
     [HttpGet("Cotizacion/{quoteId:int}")]
@@ -30,6 +32,21 @@ public class ReportController : ControllerBase
         }
 
         byte[] file = await _generatePdfService.GeneratePdf<QuoteByIdResponseDto>(response.Data, 1);
+
+        var customerEmail = response.Data.CustomerEmail;
+        if (string.IsNullOrEmpty(customerEmail))
+        {
+            return BadRequest(new { Message = "No se proporcionó un correo electrónico para el cliente." });
+        }
+
+        try
+        {
+            await _emailService.SendEmail(response.Data, 1, file, customerEmail, response.Data.VoucherNumber!);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { Message = $"Error al enviar el correo: {ex.Message}" });
+        }
 
         return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
     }

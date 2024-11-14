@@ -6,6 +6,7 @@ public class QuoteByIdResponseDto
     public string? VoucherNumber { get; set; }
     public int CustomerId { get; set; }
     public string? CustomerName { get; set; }
+    public string? CustomerEmail { get; set; }
     public string? CustomerAddress { get; set; }
     public string? CustomerPhone { get; set; }
     public string? RequestedBy { get; set; }

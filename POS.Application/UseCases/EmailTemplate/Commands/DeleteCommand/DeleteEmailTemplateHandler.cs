@@ -4,33 +4,33 @@ using POS.Application.Interfaces.Services;
 using POS.Utilities.Static;
 using WatchDog;
 
-namespace POS.Application.UseCases.DocumentTemplate.Commands.DeleteCommand;
+namespace POS.Application.UseCases.EmailTemplate.Commands.DeleteCommand;
 
-public class DeleteDocumentTemplateHandler : IRequestHandler<DeleteDocumentTemplateCommand, BaseResponse<bool>>
+public class DeleteEmailTemplateHandler : IRequestHandler<DeleteEmailTemplateCommand, BaseResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteDocumentTemplateHandler(IUnitOfWork unitOfWork)
+    public DeleteEmailTemplateHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<BaseResponse<bool>> Handle(DeleteDocumentTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse<bool>> Handle(DeleteEmailTemplateCommand request, CancellationToken cancellationToken)
     {
         var response = new BaseResponse<bool>();
 
         try
         {
-            var existsDocumentTemplate = await _unitOfWork.DocumentTemplate.GetByIdAsync(request.DocumentTemplateId);
+            var existsEmailTemplate = await _unitOfWork.EmailTemplate.GetByIdAsync(request.EmailTemplateId);
 
-            if (existsDocumentTemplate is null)
+            if (existsEmailTemplate is null)
             {
                 response.IsSuccess = false;
                 response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
                 return response;
             }
 
-            await _unitOfWork.DocumentTemplate.DeleteAsync(request.DocumentTemplateId);
+            await _unitOfWork.EmailTemplate.DeleteAsync(request.EmailTemplateId);
             await _unitOfWork.SaveChangesAsync();
 
             response.IsSuccess = true;
