@@ -12,13 +12,11 @@ public class UpdateDocumentTemplateHandler : IRequestHandler<UpdateDocumentTempl
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IFileStorageService _fileStorageService;
 
-    public UpdateDocumentTemplateHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileStorageService fileStorageService)
+    public UpdateDocumentTemplateHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _fileStorageService = fileStorageService;
     }
 
     public async Task<BaseResponse<bool>> Handle(UpdateDocumentTemplateCommand request, CancellationToken cancellationToken)
@@ -38,11 +36,6 @@ public class UpdateDocumentTemplateHandler : IRequestHandler<UpdateDocumentTempl
 
             var inventory = _mapper.Map<Entity.DocumentTemplate>(request);
             inventory.Id = request.DocumentTemplateId;
-
-            if (request.Content is not null)
-                inventory.Content = await _fileStorageService.EditFile(Containers.DOCUMENT_TEMPLATE, request.Content, existDocumentTemplate.Content!);
-            else
-                inventory.Content = existDocumentTemplate.Content;
 
             _unitOfWork.DocumentTemplate.UpdateAsync(inventory);
             await _unitOfWork.SaveChangesAsync();

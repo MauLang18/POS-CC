@@ -20,6 +20,8 @@ public class QuoteConfiguration : IEntityTypeConfiguration<Quote>
             .HasPrecision(10, 2);
         builder.Property(x => x.IVA)
             .HasPrecision(10, 2);
+        builder.Property(x => x.Discount)
+            .HasPrecision(10, 2);
         builder.Property(x => x.Total)
             .HasPrecision(10, 2);
         builder.HasOne(x => x.Customer)
@@ -33,6 +35,10 @@ public class QuoteConfiguration : IEntityTypeConfiguration<Quote>
         builder.HasOne(x => x.Status)
             .WithMany(y => y.Quotes)
             .HasForeignKey(x => x.StatusId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
+        builder.HasOne(x => x.PaymentMethod)
+            .WithMany(y => y.Quotes)
+            .HasForeignKey(x => x.PaymentMethodId)
             .OnDelete(DeleteBehavior.ClientSetNull);
     }
 }

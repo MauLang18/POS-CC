@@ -23,8 +23,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="UseCases\Quote\Commands\CreateCommand\" />
-	  <Folder Include="UseCases\Quote\Queries\GetAllQuery\" />
+	  <Folder Include="UseCases\PaymentMethod\Commands\DeleteCommand\" />
+	  <Folder Include="UseCases\PaymentMethod\Commands\UpdateCommand\" />
 	</ItemGroup>
 
 </Project>

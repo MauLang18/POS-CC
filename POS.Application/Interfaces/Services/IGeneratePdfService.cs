@@ -2,5 +2,5 @@
 
 public interface IGeneratePdfService
 {
-    byte[] GeneratePdf<T>(T data, string templatePath);
+    Task<byte[]> GeneratePdf<T>(T data, int templateId);
 }

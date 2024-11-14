@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Application.Interfaces.Persistence;
@@ -21,6 +23,7 @@ public static class DependencyInjection
 
         QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
+        // Registro de dependencias de repositorios y servicios
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IPurchaseDetailRepository, PurchaseDetailRepository>();
         services.AddScoped<IQuoteDetailRepository, QuoteDetailRepository>();
@@ -34,7 +37,11 @@ public static class DependencyInjection
         services.AddTransient<IGenerateCodeService, GenerateCodeService>();
         //services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IGenerateExcelService, GenerateExcelService>();
-        //services.AddTransient<IGeneratePdfService, GeneratePdfService>();
+        services.AddTransient<IGeneratePdfService, GeneratePdfService>();
+
+        // Registrar IConverter con SynchronizedConverter para la generación de PDF
+        services.AddSingleton<IConverter, SynchronizedConverter>(provider =>
+            new SynchronizedConverter(new PdfTools()));
 
         return services;
     }

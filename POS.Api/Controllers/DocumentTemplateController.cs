@@ -34,14 +34,14 @@ public class DocumentTemplateController : ControllerBase
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> DocumentTemplateCreate([FromForm] CreateDocumentTemplateCommand command)
+    public async Task<IActionResult> DocumentTemplateCreate([FromBody] CreateDocumentTemplateCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> DocumentTemplateUpdate([FromForm] UpdateDocumentTemplateCommand command)
+    public async Task<IActionResult> DocumentTemplateUpdate([FromBody] UpdateDocumentTemplateCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

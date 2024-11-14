@@ -12,13 +12,11 @@ public class CreateDocumentTemplateHandler : IRequestHandler<CreateDocumentTempl
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IFileStorageService _fileStorageService;
 
-    public CreateDocumentTemplateHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileStorageService fileStorageService)
+    public CreateDocumentTemplateHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _fileStorageService = fileStorageService;
     }
 
     public async Task<BaseResponse<bool>> Handle(CreateDocumentTemplateCommand request, CancellationToken cancellationToken)
@@ -28,8 +26,6 @@ public class CreateDocumentTemplateHandler : IRequestHandler<CreateDocumentTempl
         try
         {
             var documentTemplate = _mapper.Map<Entity.DocumentTemplate>(request);
-            if (request.Content is not null)
-                documentTemplate.Content = await _fileStorageService.SaveFile(Containers.DOCUMENT_TEMPLATE, request.Content);
             await _unitOfWork.DocumentTemplate.CreateAsync(documentTemplate);
             await _unitOfWork.SaveChangesAsync();
 
