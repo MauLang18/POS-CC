@@ -54,8 +54,7 @@ public class GetQuoteByIdHandler : IRequestHandler<GetQuoteByIdQuery, BaseRespon
             var quoteDetails = await _unitOfWork.QuoteDetail.GetQuoteDetailByQuoteId(request.QuoteId);
             quote.QuoteDetails = quoteDetails.ToList();
 
-            // Formatear la fecha de creación sin la hora
-            quote.AuditCreateDate = quote.AuditCreateDate.Date; // Solo conserva la fecha
+            quote.AuditCreateDate = quote.AuditCreateDate.Date;
 
             response.IsSuccess = true;
             response.Data = _mapper.Map<QuoteByIdResponseDto>(quote);

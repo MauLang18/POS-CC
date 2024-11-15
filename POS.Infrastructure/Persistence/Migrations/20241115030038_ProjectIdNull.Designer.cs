@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using POS.Infrastructure.Persistence.Contexts;
 
 #nullable disable
 
-namespace POS.Infrastructure.Persistence.migrations
+namespace POS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115030038_ProjectIdNull")]
+    partial class ProjectIdNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -981,9 +984,6 @@ namespace POS.Infrastructure.Persistence.migrations
                         .IsUnicode(false)
                         .HasColumnType("text");
 
-                    b.Property<int?>("PaymentMethodId")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("ProjectId")
                         .HasColumnType("integer");
 
@@ -1016,8 +1016,6 @@ namespace POS.Infrastructure.Persistence.migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("ProjectId");
 
@@ -1592,10 +1590,6 @@ namespace POS.Infrastructure.Persistence.migrations
                         .HasForeignKey("CustomerId")
                         .IsRequired();
 
-                    b.HasOne("POS.Domain.Entities.PaymentMethod", "PaymentMethod")
-                        .WithMany("Sales")
-                        .HasForeignKey("PaymentMethodId");
-
                     b.HasOne("POS.Domain.Entities.Project", "Project")
                         .WithMany("Sales")
                         .HasForeignKey("ProjectId");
@@ -1615,8 +1609,6 @@ namespace POS.Infrastructure.Persistence.migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("PaymentMethod");
 
                     b.Navigation("Project");
 
@@ -1697,8 +1689,6 @@ namespace POS.Infrastructure.Persistence.migrations
                     b.Navigation("Invoices");
 
                     b.Navigation("Quotes");
-
-                    b.Navigation("Sales");
                 });
 
             modelBuilder.Entity("POS.Domain.Entities.ProductService", b =>
