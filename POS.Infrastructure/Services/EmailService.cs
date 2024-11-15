@@ -1,6 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using POS.Application.Interfaces.Services;
 
@@ -11,14 +11,10 @@ public class EmailService : IEmailService
     private readonly IUnitOfWork _unitOfWork;
     private readonly EmailSettings _emailSettings;
 
-    public EmailService(IUnitOfWork unitOfWork, IConfiguration configuration)
+    public EmailService(IUnitOfWork unitOfWork, IOptions<EmailSettings> emailSettings)
     {
         _unitOfWork = unitOfWork;
-
-        // Cargar las configuraciones desde el archivo appsettings.json
-        _emailSettings = configuration.GetSection("Email").Get<EmailSettings>()!;
-        if (_emailSettings == null)
-            throw new Exception("No se pudieron cargar las configuraciones de correo electrónico.");
+        _emailSettings = emailSettings.Value;
     }
 
     public async Task SendEmail<T>(T data, int templateId, byte[] pdfBytes, string customer, string pdf)
@@ -30,16 +26,13 @@ public class EmailService : IEmailService
         var populatedBody = PopulateTemplate(template.Body, data) ?? string.Empty;
         var populatedSubject = PopulateTemplate(template.Subject, data) ?? "Sin Asunto";
 
-        // Crear el mensaje de correo usando MimeMessage
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(_emailSettings.UserName ?? throw new InvalidOperationException("El nombre de usuario no está configurado.")));
         email.To.Add(MailboxAddress.Parse(customer ?? throw new ArgumentNullException(nameof(customer), "El correo del cliente no puede ser nulo o vacío.")));
         email.Subject = populatedSubject;
 
-        // Crear el cuerpo del mensaje
         var builder = new BodyBuilder { HtmlBody = populatedBody };
 
-        // Agregar adjunto si está presente
         if (pdfBytes != null && pdfBytes.Length > 0)
         {
             builder.Attachments.Add($"{pdf}.pdf", pdfBytes, ContentType.Parse("application/pdf"));
@@ -72,5 +65,4 @@ public class EmailService : IEmailService
 
         return populatedContent;
     }
-
 }

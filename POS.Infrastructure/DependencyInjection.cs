@@ -3,8 +3,10 @@ using DinkToPdf.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using POS.Application.Interfaces.Authentication;
 using POS.Application.Interfaces.Persistence;
 using POS.Application.Interfaces.Services;
+using POS.Infrastructure.Authentication;
 using POS.Infrastructure.Persistence.Contexts;
 using POS.Infrastructure.Persistence.Repositories;
 using POS.Infrastructure.Services;
@@ -35,6 +37,11 @@ public static class DependencyInjection
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IGenerateExcelService, GenerateExcelService>();
         services.AddTransient<IGeneratePdfService, GeneratePdfService>();
+
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.Configure<EmailSettings>(configuration.GetSection(EmailSettings.SectionName));
+
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddSingleton<IConverter, SynchronizedConverter>(provider =>
             new SynchronizedConverter(new PdfTools()));

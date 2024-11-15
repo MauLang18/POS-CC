@@ -4,6 +4,7 @@ using POS.Application.UseCases.Quote.Commands.CreateCommand;
 using POS.Application.UseCases.Quote.Commands.DeleteCommand;
 using POS.Application.UseCases.Quote.Queries.GetAllQuery;
 using POS.Application.UseCases.Quote.Queries.GetByIdQuery;
+using POS.Application.UseCases.Quote.Queries.GetSelectQuery;
 
 namespace POS.Api.Controllers;
 
@@ -22,6 +23,13 @@ public class QuoteController : ControllerBase
     public async Task<IActionResult> QuoteList([FromQuery] GetAllQuoteQuery query)
     {
         var response = await _mediator.Send(query);
+        return Ok(response);
+    }
+
+    [HttpGet("Select")]
+    public async Task<IActionResult> QuoteSelect()
+    {
+        var response = await _mediator.Send(new GetSelectQuoteQuery());
         return Ok(response);
     }
 

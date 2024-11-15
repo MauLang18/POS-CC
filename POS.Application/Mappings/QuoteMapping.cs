@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using POS.Application.Commons.Select.Response;
 using POS.Application.Dtos.Quote.Response;
 using POS.Application.UseCases.Quote.Commands.CreateCommand;
 using POS.Domain.Entities;
@@ -31,6 +32,11 @@ public class QuoteMapping : Profile
             .ForMember(x => x.Code, x => x.MapFrom(y => y.ProductService.Code))
             .ForMember(x => x.Name, x => x.MapFrom(y => y.ProductService.Name))
             .ForMember(x => x.Image, x => x.MapFrom(y => y.ProductService.Image))
+            .ReverseMap();
+
+        CreateMap<Quote, SelectResponse>()
+            .ForMember(x => x.Id, x => x.MapFrom(y => y.Id))
+            .ForMember(x => x.Description, x => x.MapFrom(y => y.VoucherNumber))
             .ReverseMap();
 
         CreateMap<CreateQuoteCommand, Quote>();
