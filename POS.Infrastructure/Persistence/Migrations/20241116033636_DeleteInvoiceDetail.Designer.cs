@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using POS.Infrastructure.Persistence.Contexts;
 
 #nullable disable
 
-namespace POS.Infrastructure.Persistence.migrations
+namespace POS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241116033636_DeleteInvoiceDetail")]
+    partial class DeleteInvoiceDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -357,6 +360,9 @@ namespace POS.Infrastructure.Persistence.migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ApplyIVA")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -375,8 +381,16 @@ namespace POS.Infrastructure.Persistence.migrations
                     b.Property<int?>("AuditUpdateUser")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("IVA")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
                     b.Property<int>("InstallmentsCount")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Observation")
+                        .IsUnicode(false)
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp with time zone");
@@ -392,6 +406,10 @@ namespace POS.Infrastructure.Persistence.migrations
 
                     b.Property<int>("StatusId")
                         .HasColumnType("integer");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
 
                     b.Property<decimal>("Total")
                         .HasPrecision(10, 2)

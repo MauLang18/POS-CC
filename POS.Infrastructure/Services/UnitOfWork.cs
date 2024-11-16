@@ -20,7 +20,6 @@ public class UnitOfWork : IUnitOfWork
     private IGenericRepository<DocumentType> _documentType = null!;
     private IGenericRepository<EmailTemplate> _emailTemplate = null!;
     private IGenericRepository<Invoice> _invoice = null!;
-    private IInvoiceDetailRepository _invoiceDetail = null!;
     private IGenericRepository<License> _license = null!;
     private IGenericRepository<LicenseType> _licenseType = null!;
     private IGenericRepository<PaymentMethod> _paymentMethod = null!;
@@ -57,8 +56,6 @@ public class UnitOfWork : IUnitOfWork
     public IGenericRepository<EmailTemplate> EmailTemplate => _emailTemplate ?? new GenericRepository<EmailTemplate>(_context);
 
     public IGenericRepository<Invoice> Invoice => _invoice ?? new GenericRepository<Invoice>(_context);
-
-    public IInvoiceDetailRepository InvoiceDetail => _invoiceDetail ?? new InvoiceDetailRepository(_context);
 
     public IGenericRepository<License> License => _license ?? new GenericRepository<License>(_context);
 

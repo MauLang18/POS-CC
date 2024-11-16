@@ -13,7 +13,6 @@ public interface IUnitOfWork : IDisposable
     IGenericRepository<DocumentType> DocumentType { get; }
     IGenericRepository<EmailTemplate> EmailTemplate { get; }
     IGenericRepository<Invoice> Invoice { get; }
-    IInvoiceDetailRepository InvoiceDetail { get; }
     IGenericRepository<License> License { get; }
     IGenericRepository<LicenseType> LicenseType { get; }
     IGenericRepository<PaymentMethod> PaymentMethod { get; }

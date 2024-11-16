@@ -14,12 +14,6 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(x => x.VoucherNumber)
             .HasMaxLength(10)
             .IsUnicode(false);
-        builder.Property(x => x.Observation)
-            .IsUnicode(false);
-        builder.Property(x => x.SubTotal)
-            .HasPrecision(10, 2);
-        builder.Property(x => x.IVA)
-            .HasPrecision(10, 2);
         builder.Property(x => x.Total)
             .HasPrecision(10, 2);
         builder.HasOne(x => x.Sale)

@@ -15,7 +15,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<DocumentType> DocumentTypes { get; set; }
     public DbSet<EmailTemplate> EmailTemplates { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
-    public DbSet<InvoiceDetail> InvoicesDetails { get; set; }
     public DbSet<License> Licenses { get; set; }
     public DbSet<LicenseType> LicenseTypes { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }

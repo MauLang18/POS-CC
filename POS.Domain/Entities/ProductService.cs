@@ -16,6 +16,5 @@ public class ProductService : BaseEntity
     public virtual Unit Unit { get; set; } = null!;
     public virtual ICollection<QuoteDetail> QuoteDetails { get; set; } = new List<QuoteDetail>();
     public virtual ICollection<SaleDetail> SaleDetails { get; set; } = new List<SaleDetail>();
-    public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
     public virtual ICollection<PurchaseDetail> PurchaseDetails { get; set; } = new List<PurchaseDetail>();
 }
