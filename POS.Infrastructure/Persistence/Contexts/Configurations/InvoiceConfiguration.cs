@@ -12,7 +12,7 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(x => x.Id)
             .HasColumnName("InvoceId");
         builder.Property(x => x.VoucherNumber)
-            .HasMaxLength(10)
+            .HasMaxLength(15)
             .IsUnicode(false);
         builder.Property(x => x.Total)
             .HasPrecision(10, 2);

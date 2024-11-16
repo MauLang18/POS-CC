@@ -12,11 +12,13 @@ public class CreateLicenseHandler : IRequestHandler<CreateLicenseCommand, BaseRe
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IGenerateCodeService _generateCodeService;
 
-    public CreateLicenseHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateLicenseHandler(IUnitOfWork unitOfWork, IMapper mapper, IGenerateCodeService generateCodeService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _generateCodeService = generateCodeService;
     }
 
     public async Task<BaseResponse<bool>> Handle(CreateLicenseCommand request, CancellationToken cancellationToken)
@@ -25,7 +27,11 @@ public class CreateLicenseHandler : IRequestHandler<CreateLicenseCommand, BaseRe
 
         try
         {
+            var licenseCode = await _generateCodeService.GenerateSoftwareLicense(request.ProjectId, request.LicenseTypeId);
+
             var license = _mapper.Map<Entity.License>(request);
+            license.LicenseKey = licenseCode;
+
             await _unitOfWork.License.CreateAsync(license);
             await _unitOfWork.SaveChangesAsync();
 

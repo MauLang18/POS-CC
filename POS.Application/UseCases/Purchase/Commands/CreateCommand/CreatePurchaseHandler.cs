@@ -38,7 +38,7 @@ public class CreatePurchaseHandler : IRequestHandler<CreatePurchaseCommand, Base
                 var productService = await _unitOfWork.ProductService.GetByIdAsync(detail.ProductServiceId);
 
                 if (productService.IsService.Equals((int)ServiceType.Producto))
-                    productService.StockQuantity -= detail.Quatity;
+                    productService.StockQuantity += detail.Quantity;
 
                 _unitOfWork.ProductService.UpdateAsync(productService);
                 await _unitOfWork.SaveChangesAsync();

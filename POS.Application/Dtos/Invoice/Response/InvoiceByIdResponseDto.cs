@@ -1,6 +1,4 @@
-﻿using POS.Application.Dtos.Sale.Response;
-
-namespace POS.Application.Dtos.Invoice.Response;
+﻿namespace POS.Application.Dtos.Invoice.Response;
 
 public class InvoiceByIdResponseDto
 {

@@ -43,7 +43,7 @@ public class DeletePurchaseHandler : IRequestHandler<DeletePurchaseCommand, Base
                 var productService = await _unitOfWork.ProductService.GetByIdAsync(detail.ProductServiceId);
 
                 if (productService.IsService.Equals((int)ServiceType.Producto))
-                    productService.StockQuantity += detail.Quantity;
+                    productService.StockQuantity -= detail.Quantity;
 
                 _unitOfWork.ProductService.UpdateAsync(productService);
                 await _unitOfWork.SaveChangesAsync();

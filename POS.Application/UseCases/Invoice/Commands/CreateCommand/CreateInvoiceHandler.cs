@@ -1,24 +1,19 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using POS.Application.Commons.Bases;
 using POS.Application.Interfaces.Services;
-using POS.Domain.Entities;
+using POS.Application.UseCases.Invoice.Commands.CreateCommand;
 using POS.Utilities.Static;
 using WatchDog;
 using Entity = POS.Domain.Entities;
 
-namespace POS.Application.UseCases.Invoice.Commands.CreateCommand;
-
 public class CreateInvoiceHandler : IRequestHandler<CreateInvoiceCommand, BaseResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IGenerateCodeService _generateCodeService;
 
-    public CreateInvoiceHandler(IUnitOfWork unitOfWork, IMapper mapper, IGenerateCodeService generateCodeService)
+    public CreateInvoiceHandler(IUnitOfWork unitOfWork, IGenerateCodeService generateCodeService)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _generateCodeService = generateCodeService;
     }
 
@@ -38,14 +33,20 @@ public class CreateInvoiceHandler : IRequestHandler<CreateInvoiceCommand, BaseRe
 
             for (int i = 1; i <= installmentCount; i++)
             {
-                var invoice = _mapper.Map<Entity.Invoice>(request);
-                invoice.State = (int)StateTypes.Activo;
+                var invoice = new Entity.Invoice
+                {
+                    SaleId = request.SaleId,
+                    Total = Math.Round(totalAmount / installmentCount, 2),
+                    InstallmentsCount = request.InstallmentsCount,
+                    PaymentMethodId = request.PaymentMethodId,
+                    StatusId = request.StatusId,
+                    PaymentDate = DateTime.UtcNow,
+                    VoucherTypeId = request.VoucherTypeId,
 
-                invoice.VoucherNumber = installmentCount > 1
-                    ? $"{await _generateCodeService.GenerateCodeInvoice(invoice.Id)}-{i}"
-                    : await _generateCodeService.GenerateCodeInvoice(invoice.Id);
-
-                invoice.Total = Math.Round(totalAmount / installmentCount, 2);
+                    VoucherNumber = installmentCount > 1
+                        ? $"{await _generateCodeService.GenerateCodeInvoice(request.SaleId)}-{i}"
+                        : await _generateCodeService.GenerateCodeInvoice(request.SaleId)
+                };
 
                 invoices.Add(invoice);
             }

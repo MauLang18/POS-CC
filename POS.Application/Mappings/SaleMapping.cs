@@ -19,6 +19,7 @@ public class SaleMapping : Profile
         CreateMap<Sale, SaleByIdResponseDto>()
             .ForMember(x => x.SaleId, x => x.MapFrom(y => y.Id))
             .ForMember(x => x.CustomerName, x => x.MapFrom(y => y.Customer.Name))
+            .ForMember(x => x.CustomerIdNumber, x => x.MapFrom(y => y.Customer.DocumentNumber))
             .ForMember(x => x.CustomerAddress, x => x.MapFrom(y => y.Customer.Address))
             .ForMember(x => x.CustomerPhone, x => x.MapFrom(y => y.Customer.Phone))
             .ForMember(x => x.PaymentTerms, x => x.MapFrom(y => y.Customer.CreditType.Name))

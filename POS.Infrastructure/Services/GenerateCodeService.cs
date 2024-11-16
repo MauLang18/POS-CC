@@ -1,15 +1,19 @@
 ﻿using POS.Application.Interfaces.Persistence;
 using POS.Application.Interfaces.Services;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace POS.Infrastructure.Services;
 
 public class GenerateCodeService : IGenerateCodeService
 {
-    private readonly ICodeRepository _codeRepository; // Repositorio para obtener el último código guardado
+    private readonly ICodeRepository _codeRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GenerateCodeService(ICodeRepository codeRepository)
+    public GenerateCodeService(ICodeRepository codeRepository, IUnitOfWork unitOfWork)
     {
         _codeRepository = codeRepository;
+        _unitOfWork = unitOfWork;
     }
 
     private async Task<string> GenerateCodeAsync(string prefix, int lastId)
@@ -53,6 +57,34 @@ public class GenerateCodeService : IGenerateCodeService
         int lastId = ParseLastId(lastCode!);
 
         return await GenerateCodeAsync(prefix, lastId);
+    }
+
+    public async Task<string> GenerateSoftwareLicense(int projectId, int licenseTypeId)
+    {
+        var softwareName = await _unitOfWork.Project.GetByIdAsync(projectId);
+        var licenseType = await _unitOfWork.LicenseType.GetByIdAsync(licenseTypeId);
+
+        var prefix = $"{softwareName.InternalName.Substring(0, 3).ToUpper()}-{licenseType.Name.Substring(0, 3).ToUpper()}";
+        var uniquePart = GenerateRandomString(16);
+        return $"{prefix}-{uniquePart}";
+    }
+
+    private string GenerateRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var randomBytes = new byte[length];
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(randomBytes);
+        }
+
+        var stringBuilder = new StringBuilder(length);
+        foreach (var byteValue in randomBytes)
+        {
+            stringBuilder.Append(chars[byteValue % chars.Length]);
+        }
+
+        return stringBuilder.ToString();
     }
 
     private int ParseLastId(string lastCode)

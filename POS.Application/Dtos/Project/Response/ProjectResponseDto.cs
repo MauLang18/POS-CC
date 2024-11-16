@@ -12,5 +12,5 @@ public class ProjectResponseDto
     public DateTime AuditCreateDate { get; set; }
     public string? Status { get; set; }
     public int State { get; set; }
-    public int StateProject { get; set; }
+    public string? StateProject { get; set; }
 }

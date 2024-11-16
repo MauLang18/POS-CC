@@ -29,7 +29,7 @@ public class PurchaseDetailRepository : IPurchaseDetailRepository
                 Code = x.ProductService.Code,
                 Name = x.ProductService.Name,
             },
-            Quatity = x.PurchaseDetail.Quatity,
+            Quantity = x.PurchaseDetail.Quantity,
             UnitPrice = x.PurchaseDetail.UnitPrice,
             Total = x.PurchaseDetail.Total
         })

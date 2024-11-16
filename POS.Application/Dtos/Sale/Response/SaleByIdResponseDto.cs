@@ -8,7 +8,8 @@ public class SaleByIdResponseDto
     public string? VoucherNumber { get; set; }
     public int CustomerId { get; set; }
     public int? QuoteId { get; set; }
-    public string? CustomerID {  get; set; }
+    public int? ProjectId { get; set; }
+    public string? CustomerIdNumber {  get; set; }
     public string? CustomerName { get; set; }
     public string? CustomerEmail { get; set; }
     public string? CustomerAddress { get; set; }
