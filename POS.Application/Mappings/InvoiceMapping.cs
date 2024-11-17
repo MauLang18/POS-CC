@@ -17,6 +17,7 @@ public class InvoiceMapping : Profile
 
         CreateMap<Invoice, InvoiceByIdResponseDto>()
             .ForMember(x => x.InvoiceId, x => x.MapFrom(y => y.Id))
+            .ForMember(x => x.PaymentMethod, x => x.MapFrom(y => y.PaymentMethod.Name))
             .ReverseMap();
 
         CreateMap<CreateInvoiceCommand, Invoice>();

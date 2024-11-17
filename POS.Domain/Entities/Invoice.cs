@@ -9,7 +9,8 @@ public class Invoice : BaseEntity
     public int StatusId { get; set; }
     public int InstallmentsCount { get; set; }
     public int PaymentMethodId { get; set; }
-    public DateTime PaymentDate { get; set; }
+    public DateTime? PaymentDate { get; set; }
+    public DateTime? IssueDate { get; set; }
 
     public virtual VoucherType VoucherType { get; set; } = null!;
     public virtual Sale Sale { get; set; } = null!;

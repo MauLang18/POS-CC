@@ -40,7 +40,6 @@ public class CreateInvoiceHandler : IRequestHandler<CreateInvoiceCommand, BaseRe
                     InstallmentsCount = request.InstallmentsCount,
                     PaymentMethodId = request.PaymentMethodId,
                     StatusId = request.StatusId,
-                    PaymentDate = DateTime.UtcNow,
                     VoucherTypeId = request.VoucherTypeId,
 
                     VoucherNumber = installmentCount > 1

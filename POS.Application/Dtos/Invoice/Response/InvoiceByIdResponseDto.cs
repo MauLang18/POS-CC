@@ -6,8 +6,10 @@ public class InvoiceByIdResponseDto
     public string VoucherNumber { get; set; } = null!;
     public int SaleId { get; set; }
     public decimal Total { get; set; }
+    public string? PaymentMethod { get; set; }
     public int StatusId { get; set; }
     public int InstallmentsCount { get; set; }
     public int PaymentMethodId { get; set; }
     public DateTime PaymentDate { get; set; }
+    public DateTime IssueDate { get; set; }
 }

@@ -4,6 +4,7 @@ using POS.Application.Commons.Bases;
 using POS.Application.Dtos.Invoice.Response;
 using POS.Application.Interfaces.Services;
 using POS.Application.UseCases.Invoice.Queries.GetByIdQuery;
+using POS.Domain.Entities;
 using POS.Utilities.Static;
 using WatchDog;
 
@@ -33,6 +34,12 @@ public class GetInvoiceByIdHandler : IRequestHandler<GetInvoiceByIdQuery, BaseRe
                 response.IsSuccess = false;
                 response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
                 return response;
+            }
+
+            var paymentMethod = await _unitOfWork.PaymentMethod.GetByIdAsync(invoice.PaymentMethodId);
+            if (paymentMethod != null)
+            {
+                invoice.PaymentMethod = paymentMethod;
             }
 
             invoice.AuditCreateDate = invoice.AuditCreateDate.Date;
