@@ -27,6 +27,13 @@ public class UpdateProjectHandler : IRequestHandler<UpdateProjectCommand, BaseRe
         {
             var project = _mapper.Map<Entity.Project>(request);
             project.Id = request.ProjectId;
+
+            var startDate = DateTime.SpecifyKind(DateTime.Parse(request.StartDate.ToString()), DateTimeKind.Utc);
+            var endDate = DateTime.SpecifyKind(DateTime.Parse(request.EndDate.ToString()), DateTimeKind.Utc);
+
+            project.StartDate = startDate;
+            project.EndDate = endDate;
+
             _unitOfWork.Project.UpdateAsync(project);
             await _unitOfWork.SaveChangesAsync();
 

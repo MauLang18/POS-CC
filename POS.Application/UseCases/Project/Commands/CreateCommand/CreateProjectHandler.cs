@@ -26,6 +26,13 @@ public class CreateProjectHandler : IRequestHandler<CreateProjectCommand, BaseRe
         try
         {
             var project = _mapper.Map<Entity.Project>(request);
+
+            var startDate = DateTime.SpecifyKind(DateTime.Parse(request.StartDate.ToString()), DateTimeKind.Utc);
+            var endDate = DateTime.SpecifyKind(DateTime.Parse(request.EndDate.ToString()), DateTimeKind.Utc);
+
+            project.StartDate = startDate;
+            project.EndDate = endDate;
+
             await _unitOfWork.Project.CreateAsync(project);
             await _unitOfWork.SaveChangesAsync();
 

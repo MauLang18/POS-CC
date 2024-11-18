@@ -34,6 +34,8 @@ public class CreateLicenseHandler : IRequestHandler<CreateLicenseCommand, BaseRe
 
             var license = _mapper.Map<Entity.License>(request);
             license.LicenseKey = licenseCode;
+            license.IssueDate = issueDate;
+            license.ExpirationDate = expirationDate;
 
             await _unitOfWork.License.CreateAsync(license);
             await _unitOfWork.SaveChangesAsync();
