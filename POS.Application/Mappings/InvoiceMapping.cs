@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using POS.Application.Dtos.Invoice.Response;
 using POS.Application.UseCases.Invoice.Commands.CreateCommand;
+using POS.Application.UseCases.Invoice.Commands.UpdateCommand;
 using POS.Domain.Entities;
 
 namespace POS.Application.Mappings;
@@ -21,5 +22,7 @@ public class InvoiceMapping : Profile
             .ReverseMap();
 
         CreateMap<CreateInvoiceCommand, Invoice>();
+
+        CreateMap<UpdateInvoiceCommand, Invoice>();
     }
 }

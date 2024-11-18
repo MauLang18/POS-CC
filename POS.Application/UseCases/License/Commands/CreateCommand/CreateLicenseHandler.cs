@@ -29,6 +29,9 @@ public class CreateLicenseHandler : IRequestHandler<CreateLicenseCommand, BaseRe
         {
             var licenseCode = await _generateCodeService.GenerateSoftwareLicense(request.ProjectId, request.LicenseTypeId);
 
+            var issueDate = DateTime.SpecifyKind(DateTime.Parse(request.IssueDate.ToString()), DateTimeKind.Utc);
+            var expirationDate = DateTime.SpecifyKind(DateTime.Parse(request.ExpirationDate.ToString()), DateTimeKind.Utc);
+
             var license = _mapper.Map<Entity.License>(request);
             license.LicenseKey = licenseCode;
 

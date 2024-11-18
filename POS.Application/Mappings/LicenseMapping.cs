@@ -2,7 +2,6 @@
 using POS.Application.Commons.Select.Response;
 using POS.Application.Dtos.License.Response;
 using POS.Application.UseCases.License.Commands.CreateCommand;
-using POS.Application.UseCases.License.Commands.UpdateCommand;
 using POS.Domain.Entities;
 using POS.Utilities.Static;
 
@@ -14,6 +13,8 @@ public class LicenseMapping : Profile
     {
         CreateMap<License, LicenseResponseDto>()
             .ForMember(x => x.LicenseId, x => x.MapFrom(y => y.Id))
+            .ForMember(x => x.LicenseType, x => x.MapFrom(y => y.LicenseType.Name))
+            .ForMember(x => x.Project, x => x.MapFrom(y => y.Project.InternalName))
             .ForMember(x => x.StateLicense, x => x.MapFrom(y => y.State.Equals((int)StateTypes.Activo) ? "ACTIVO" : "INACTIVO"))
             .ReverseMap();
 
@@ -27,7 +28,5 @@ public class LicenseMapping : Profile
             .ReverseMap();
 
         CreateMap<CreateLicenseCommand, License>();
-
-        CreateMap<UpdateLicenseCommand, License>();
     }
 }

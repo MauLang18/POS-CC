@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using POS.Application.UseCases.License.Commands.CreateCommand;
 using POS.Application.UseCases.License.Commands.DeleteCommand;
-using POS.Application.UseCases.License.Commands.UpdateCommand;
 using POS.Application.UseCases.License.Queries.GetAllQuery;
 using POS.Application.UseCases.License.Queries.GetByIdQuery;
 
@@ -35,13 +34,6 @@ public class LicenseController : ControllerBase
 
     [HttpPost("Create")]
     public async Task<IActionResult> LicenseCreate([FromBody] CreateLicenseCommand command)
-    {
-        var response = await _mediator.Send(command);
-        return Ok(response);
-    }
-
-    [HttpPut("Update")]
-    public async Task<IActionResult> LicenseUpdate([FromBody] UpdateLicenseCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

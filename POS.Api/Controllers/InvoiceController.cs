@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using POS.Application.UseCases.Invoice.Commands.CreateCommand;
-using POS.Application.UseCases.Invoice.Commands.DeleteCommand;
+using POS.Application.UseCases.Invoice.Commands.UpdateCommand;
 using POS.Application.UseCases.Invoice.Queries.GetAllQuery;
 using POS.Application.UseCases.Invoice.Queries.GetByIdQuery;
 
@@ -39,10 +39,10 @@ public class InvoiceController : ControllerBase
         return Ok(response);
     }
 
-    [HttpDelete("Delete/{invoiceId:int}")]
-    public async Task<IActionResult> InvoiceDelete(int invoiceId)
+    [HttpPut("Update")]
+    public async Task<IActionResult> InvoiceUpdate([FromBody] UpdateInvoiceCommand command)
     {
-        var response = await _mediator.Send(new DeleteInvoiceCommand() { InvoiceId = invoiceId });
+        var response = await _mediator.Send(command);
         return Ok(response);
     }
 }

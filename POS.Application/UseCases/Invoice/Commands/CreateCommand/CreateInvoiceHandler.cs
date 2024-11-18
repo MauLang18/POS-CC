@@ -29,18 +29,19 @@ public class CreateInvoiceHandler : IRequestHandler<CreateInvoiceCommand, BaseRe
             if (installmentCount < 1) installmentCount = 1;
 
             var invoices = new List<Entity.Invoice>();
-            var totalAmount = request.Total;
+            var sale = _unitOfWork.Sale.GetByIdAsync(request.SaleId);
 
             for (int i = 1; i <= installmentCount; i++)
             {
                 var invoice = new Entity.Invoice
                 {
                     SaleId = request.SaleId,
-                    Total = Math.Round(totalAmount / installmentCount, 2),
+                    Total = Math.Round(sale.Result.Total / installmentCount, 2),
                     InstallmentsCount = request.InstallmentsCount,
                     PaymentMethodId = request.PaymentMethodId,
                     StatusId = request.StatusId,
                     VoucherTypeId = request.VoucherTypeId,
+                    State = (int)StateTypes.Activo,
 
                     VoucherNumber = installmentCount > 1
                         ? $"{await _generateCodeService.GenerateCodeInvoice(request.SaleId)}-{i}"

@@ -28,7 +28,10 @@ public class GetAllLicenseHandler : IRequestHandler<GetAllLicenseQuery, BaseResp
 
         try
         {
-            var licenses = _unitOfWork.License.GetAllQueryable();
+            var licenses = _unitOfWork.License.GetAllQueryable()
+                .Include(x => x.Project)
+                .Include(x => x.LicenseType)
+                .AsQueryable();
 
             if (request.NumFilter is not null && !string.IsNullOrEmpty(request.TextFilter))
             {
