@@ -25,8 +25,8 @@ public class ReportController : ControllerBase
         _emailService = emailService;
     }
 
-    [HttpGet("Cotizacion/{quoteId:int}")]
-    public async Task<IActionResult> QuotePdf(int quoteId)
+    [HttpGet("CotizacionEmail/{quoteId:int}")]
+    public async Task<IActionResult> QuoteEmailPdf(int quoteId)
     {
         var response = await _mediator.Send(new GetQuoteByIdQuery { QuoteId = quoteId });
 
@@ -51,6 +51,21 @@ public class ReportController : ControllerBase
         {
             return StatusCode(500, new { Message = $"Error al enviar el correo: {ex.Message}" });
         }
+
+        return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
+    }
+
+    [HttpGet("Cotizacion/{quoteId:int}")]
+    public async Task<IActionResult> QuotePdf(int quoteId)
+    {
+        var response = await _mediator.Send(new GetQuoteByIdQuery { QuoteId = quoteId });
+
+        if (!response.IsSuccess || response.Data == null)
+        {
+            return NotFound(new { Message = $"No se encontró una cotización con el ID {quoteId}" });
+        }
+
+        byte[] file = await _generatePdfService.GeneratePdf<QuoteByIdResponseDto>(response.Data, 1);
 
         return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
     }

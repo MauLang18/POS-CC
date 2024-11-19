@@ -30,7 +30,7 @@ public class QuoteDetailRepository : IQuoteDetailRepository
                 Name = x.ProductService.Name,
             },
             Quantity = x.QuoteDetail.Quantity,
-            UnitPrice = x.QuoteDetail.UnitPrice,
+            Price = x.QuoteDetail.Price,
             Total = x.QuoteDetail.Total
         })
                 .ToListAsync();

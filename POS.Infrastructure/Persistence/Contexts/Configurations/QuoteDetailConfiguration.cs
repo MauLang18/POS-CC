@@ -9,7 +9,7 @@ public class QuoteDetailConfiguration : IEntityTypeConfiguration<QuoteDetail>
     public void Configure(EntityTypeBuilder<QuoteDetail> builder)
     {
         builder.HasKey(x => new { x.QuoteId, x.ProductServiceId });
-        builder.Property(x => x.UnitPrice)
+        builder.Property(x => x.Price)
             .HasPrecision(10, 2);
         builder.Property(x => x.Total)
             .HasPrecision(10, 2);

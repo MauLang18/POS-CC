@@ -3,6 +3,7 @@
 public class QuoteByIdResponseDto
 {
     public int QuoteId { get; set; }
+    public int VoucherTypeId { get; set; }
     public string? VoucherNumber { get; set; }
     public int CustomerId { get; set; }
     public string? CustomerName { get; set; }
@@ -11,6 +12,7 @@ public class QuoteByIdResponseDto
     public string? CustomerPhone { get; set; }
     public string? RequestedBy { get; set; }
     public string? PaymentTerms { get; set; }
+    public int PaymentMethodId { get; set; }
     public string? PaymentMethod { get; set; }
     public DateTime AuditCreateDate { get; set; }
     public string? Observation { get; set; }

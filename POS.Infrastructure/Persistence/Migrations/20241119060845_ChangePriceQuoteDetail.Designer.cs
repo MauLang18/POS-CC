@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using POS.Infrastructure.Persistence.Contexts;
 
 #nullable disable
 
-namespace POS.Infrastructure.Persistence.migrations
+namespace POS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241119060845_ChangePriceQuoteDetail")]
+    partial class ChangePriceQuoteDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -884,14 +887,14 @@ namespace POS.Infrastructure.Persistence.migrations
                     b.Property<int>("ProductServiceId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Total")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
+                    b.Property<decimal>("UnitPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)");
 
