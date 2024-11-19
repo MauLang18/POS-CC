@@ -108,7 +108,7 @@ public class ReportController : ControllerBase
                 Code = detail.Code,
                 Name = detail.Name,
                 Quantity = baseQuantity + (remainingQuantity > 0 ? 1 : 0),
-                UnitPrice = detail.UnitPrice,
+                Price = detail.Price,
                 Total = totalForInstallment
             });
 
@@ -117,7 +117,7 @@ public class ReportController : ControllerBase
 
         var invoicePdfData = new InvoicePdfDto
         {
-            VoucherNumber = response.Data.VoucherNumber,
+            VoucherNumber = response.Data.VoucherNumber!,
             InstallmentsCount = response.Data.InstallmentsCount,
             IssueDate = response.Data.IssueDate,
             DueDate = response.Data.IssueDate.AddDays(15),

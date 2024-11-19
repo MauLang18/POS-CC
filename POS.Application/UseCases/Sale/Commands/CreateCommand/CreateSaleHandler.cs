@@ -2,14 +2,13 @@
 using MediatR;
 using POS.Application.Commons.Bases;
 using POS.Application.Interfaces.Services;
-using POS.Domain.Entities;
 using POS.Utilities.Static;
 using WatchDog;
 using Entity = POS.Domain.Entities;
 
 namespace POS.Application.UseCases.Sale.Commands.CreateCommand;
 
-public class CreateSaleHandler : IRequestHandler<CreateSaleCommand,BaseResponse<bool>>
+public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;

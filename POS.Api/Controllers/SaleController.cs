@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using POS.Application.UseCases.Sale.Commands.CreateCommand;
 using POS.Application.UseCases.Sale.Commands.DeleteCommand;
+using POS.Application.UseCases.Sale.Commands.UpdateCommand;
 using POS.Application.UseCases.Sale.Queries.GetAllQuery;
 using POS.Application.UseCases.Sale.Queries.GetByIdQuery;
 using POS.Application.UseCases.Sale.Queries.GetSelectQuery;
@@ -42,6 +43,13 @@ public class SaleController : ControllerBase
 
     [HttpPost("Create")]
     public async Task<IActionResult> SaleCreate([FromBody] CreateSaleCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
+    }
+
+    [HttpPut("Update")]
+    public async Task<IActionResult> SaleUpdate([FromBody] UpdateSaleCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

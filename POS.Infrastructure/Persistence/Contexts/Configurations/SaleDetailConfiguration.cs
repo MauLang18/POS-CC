@@ -9,7 +9,7 @@ public class SaleDetailConfiguration : IEntityTypeConfiguration<SaleDetail>
     public void Configure(EntityTypeBuilder<SaleDetail> builder)
     {
         builder.HasKey(x => new { x.SaleId, x.ProductServiceId });
-        builder.Property(x => x.UnitPrice)
+        builder.Property(x => x.Price)
             .HasPrecision(10, 2);
         builder.Property(x => x.Total)
             .HasPrecision(10, 2);

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using POS.Application.UseCases.Quote.Commands.CreateCommand;
 using POS.Application.UseCases.Quote.Commands.DeleteCommand;
+using POS.Application.UseCases.Quote.Commands.UpdateCommand;
 using POS.Application.UseCases.Quote.Queries.GetAllQuery;
 using POS.Application.UseCases.Quote.Queries.GetByIdQuery;
 using POS.Application.UseCases.Quote.Queries.GetSelectQuery;
@@ -42,6 +43,13 @@ public class QuoteController : ControllerBase
 
     [HttpPost("Create")]
     public async Task<IActionResult> QuoteCreate([FromBody] CreateQuoteCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
+    }
+
+    [HttpPut("Update")]
+    public async Task<IActionResult> QuoteUpdate([FromBody] UpdateQuoteCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

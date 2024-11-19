@@ -2,6 +2,7 @@
 using POS.Application.Commons.Select.Response;
 using POS.Application.Dtos.Quote.Response;
 using POS.Application.UseCases.Quote.Commands.CreateCommand;
+using POS.Application.UseCases.Quote.Commands.UpdateCommand;
 using POS.Domain.Entities;
 
 namespace POS.Application.Mappings;
@@ -42,5 +43,7 @@ public class QuoteMapping : Profile
         CreateMap<CreateQuoteCommand, Quote>();
 
         CreateMap<CreateQuoteDetailCommand, QuoteDetail>();
+
+        CreateMap<UpdateQuoteCommand, Quote>();
     }
 }

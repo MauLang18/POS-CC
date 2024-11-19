@@ -1,15 +1,14 @@
-﻿using POS.Application.Dtos.Sale.Response;
-
-namespace POS.Application.Dtos.Sale.Response;
+﻿namespace POS.Application.Dtos.Sale.Response;
 
 public class SaleByIdResponseDto
 {
     public int SaleId { get; set; }
+    public int VoucherTypeId { get; set; }
     public string? VoucherNumber { get; set; }
     public int CustomerId { get; set; }
     public int? QuoteId { get; set; }
     public int? ProjectId { get; set; }
-    public string? CustomerIdNumber {  get; set; }
+    public string? CustomerIdNumber { get; set; }
     public string? CustomerName { get; set; }
     public string? CustomerEmail { get; set; }
     public string? CustomerAddress { get; set; }

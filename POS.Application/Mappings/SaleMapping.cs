@@ -2,6 +2,7 @@
 using POS.Application.Commons.Select.Response;
 using POS.Application.Dtos.Sale.Response;
 using POS.Application.UseCases.Sale.Commands.CreateCommand;
+using POS.Application.UseCases.Sale.Commands.UpdateCommand;
 using POS.Domain.Entities;
 
 namespace POS.Application.Mappings;
@@ -41,5 +42,7 @@ public class SaleMapping : Profile
         CreateMap<CreateSaleCommand, Sale>();
 
         CreateMap<CreateSaleDetailCommand, SaleDetail>();
+
+        CreateMap<UpdateSaleCommand, Sale>();
     }
 }

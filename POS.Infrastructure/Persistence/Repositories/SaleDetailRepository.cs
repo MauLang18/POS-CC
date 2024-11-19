@@ -30,7 +30,7 @@ public class SaleDetailRepository : ISaleDetailRepository
                 Name = x.ProductService.Name,
             },
             Quantity = x.SaleDetail.Quantity,
-            UnitPrice = x.SaleDetail.UnitPrice,
+            Price = x.SaleDetail.Price,
             Total = x.SaleDetail.Total
         })
                 .ToListAsync();
