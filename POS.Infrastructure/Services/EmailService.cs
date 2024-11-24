@@ -39,6 +39,13 @@ public class EmailService : IEmailService
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(_emailSettings.UserName ?? throw new InvalidOperationException("El nombre de usuario no está configurado.")));
         email.To.Add(MailboxAddress.Parse(customer ?? throw new ArgumentNullException(nameof(customer), "El correo del cliente no puede ser nulo o vacío.")));
+
+        // Agregar CC si está configurado en _emailSettings
+        if (!string.IsNullOrEmpty(_emailSettings.CC))
+        {
+            email.Cc.Add(MailboxAddress.Parse(_emailSettings.CC));
+        }
+
         email.Subject = populatedSubject;
 
         var builder = new BodyBuilder { HtmlBody = populatedBody };
