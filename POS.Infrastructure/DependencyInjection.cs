@@ -3,6 +3,8 @@ using DinkToPdf.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using POS.Application.Commons.Config;
 using POS.Application.Interfaces.Authentication;
 using POS.Application.Interfaces.Persistence;
 using POS.Application.Interfaces.Services;
@@ -17,10 +19,17 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
+        var serviceProvider = services.BuildServiceProvider();
+        var secretService = serviceProvider.GetRequiredService<IVaultSecretService>();
+
+        var secretJson = secretService.GetSecret("CustomCodeAPI/data/ConnectionStrings").GetAwaiter().GetResult();
+        var SecretResponse = JsonConvert.DeserializeObject<SecretResponse<ConnectionStringsConfig>>(secretJson);
+        var Config = SecretResponse?.Data?.Data;
+
         var assembly = typeof(ApplicationDbContext).Assembly.FullName;
 
         services.AddDbContext<ApplicationDbContext>(
-                options => options.UseNpgsql(configuration.GetConnectionString("Connection"),
+                options => options.UseNpgsql(Config!.Connection,
                 b => b.MigrationsAssembly(assembly)));
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

@@ -2,12 +2,15 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using POS.Api.Middleware;
 using POS.Application;
+using POS.Application.Interfaces.Services;
 using POS.Infrastructure;
+using POS.Infrastructure.Services;
 using WatchDog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IVaultSecretService, VaultSecretService>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHealthCheck(builder.Configuration);

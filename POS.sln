@@ -19,17 +19,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB0B5AFA-4E4E-4381-8BFE-9886E8D6B3F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS.Domain", "POS.Domain\POS.Domain.csproj", "{D46E310F-5F62-4739-9D03-E9C0E21B9FAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS.Domain", "POS.Domain\POS.Domain.csproj", "{D46E310F-5F62-4739-9D03-E9C0E21B9FAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS.Infrastructure", "POS.Infrastructure\POS.Infrastructure.csproj", "{ECE7AC06-100D-43ED-88D9-BD6707FF10F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS.Infrastructure", "POS.Infrastructure\POS.Infrastructure.csproj", "{ECE7AC06-100D-43ED-88D9-BD6707FF10F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS.Application", "POS.Application\POS.Application.csproj", "{6C3E1C86-FEEA-4C05-BAF6-2A5F2E9335EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS.Application", "POS.Application\POS.Application.csproj", "{6C3E1C86-FEEA-4C05-BAF6-2A5F2E9335EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS.Utilities", "POS.Utilities\POS.Utilities.csproj", "{63943D54-F081-4166-92DA-0F2B9FD96220}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS.Utilities", "POS.Utilities\POS.Utilities.csproj", "{63943D54-F081-4166-92DA-0F2B9FD96220}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS.Tests", "POS.Tests\POS.Tests.csproj", "{52EFE89E-DCC8-44B8-AE3C-72C578D18B01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS.Tests", "POS.Tests\POS.Tests.csproj", "{52EFE89E-DCC8-44B8-AE3C-72C578D18B01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS.Api", "POS.Api\POS.Api.csproj", "{4AC0E666-84C6-4E72-A99E-FFDDDF761E89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS.Api", "POS.Api\POS.Api.csproj", "{4AC0E666-84C6-4E72-A99E-FFDDDF761E89}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7D833D08-4FE8-4547-A37C-99AA50A1D650}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{4AC0E666-84C6-4E72-A99E-FFDDDF761E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AC0E666-84C6-4E72-A99E-FFDDDF761E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AC0E666-84C6-4E72-A99E-FFDDDF761E89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D833D08-4FE8-4547-A37C-99AA50A1D650}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D833D08-4FE8-4547-A37C-99AA50A1D650}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D833D08-4FE8-4547-A37C-99AA50A1D650}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D833D08-4FE8-4547-A37C-99AA50A1D650}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

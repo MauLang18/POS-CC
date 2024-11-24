@@ -1,0 +1,6 @@
+services:
+  pos.api:
+    image: ${DOCKER_REGISTRY-}posapi
+    build:
+      context: .
+      dockerfile: POS.Api/Dockerfile

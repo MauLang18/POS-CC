@@ -1,7 +1,8 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Options;
 using MimeKit;
+using Newtonsoft.Json;
+using POS.Application.Commons.Config;
 using POS.Application.Interfaces.Services;
 
 namespace POS.Infrastructure.Services;
@@ -11,10 +12,19 @@ public class EmailService : IEmailService
     private readonly IUnitOfWork _unitOfWork;
     private readonly EmailSettings _emailSettings;
 
-    public EmailService(IUnitOfWork unitOfWork, IOptions<EmailSettings> emailSettings)
+    public EmailService(IUnitOfWork unitOfWork, IVaultSecretService vaultSecretService)
     {
         _unitOfWork = unitOfWork;
-        _emailSettings = emailSettings.Value;
+
+        var secretJson = vaultSecretService.GetSecret("CustomCodeAPI/data/Email").GetAwaiter().GetResult();
+        var secretResponse = JsonConvert.DeserializeObject<SecretResponse<EmailSettings>>(secretJson);
+
+        if (secretResponse?.Data?.Data == null)
+        {
+            throw new Exception("Failed to retrieve email settings from Vault.");
+        }
+
+        _emailSettings = secretResponse.Data.Data;
     }
 
     public async Task SendEmail<T>(T data, int templateId, byte[] pdfBytes, string customer, string pdf)
@@ -40,7 +50,6 @@ public class EmailService : IEmailService
 
         email.Body = builder.ToMessageBody();
 
-        // Configurar el cliente SMTP de MailKit
         using var smtpClient = new SmtpClient();
         await smtpClient.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
         smtpClient.Authenticate(_emailSettings.UserName, _emailSettings.PassWord);
