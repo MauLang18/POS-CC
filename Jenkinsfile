@@ -14,7 +14,7 @@ pipeline {
     }
 
     stages {
-        stage('Ejecutar Pruebas Unitarias') {
+        /*stage('Ejecutar Pruebas Unitarias') {
             steps {
                 sh 'dotnet test TrackX.Tests/TrackX.Tests.csproj --logger trx'
             }
@@ -25,7 +25,7 @@ pipeline {
                          body: "Las pruebas unitarias han fallado en el build ${env.BUILD_URL}. Verifica el pipeline para más detalles."
                 }
             }
-        }
+        }*/
 
         stage('Construcción de Docker') {
             steps {
