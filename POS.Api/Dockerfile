@@ -1,6 +1,15 @@
 # Base image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+
 RUN apt-get update && apt-get install -y tzdata
+
+# Instalar dependencias necesarias
+RUN apt-get update && \
+    apt-get install -y apt-utils && \
+    apt-get install -y libgdiplus && \
+    apt-get install -y libc6-dev && \
+    ln -s /usr/lib/libgdiplus.so /usr/lib/gdiplus.dll
+
 RUN mkdir -p /app/wwwroot && \
     chmod 755 /app/wwwroot
 WORKDIR /app

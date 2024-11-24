@@ -224,21 +224,6 @@ public class ReportController : ControllerBase
 
         byte[] file = await _generatePdfService.GeneratePdf<InvoicePdfDto>(invoicePdfData, 2);
 
-        var customerEmail = sale.Data.CustomerEmail;
-        if (string.IsNullOrEmpty(customerEmail))
-        {
-            return BadRequest(new { Message = "No se proporcionó un correo electrónico para el cliente." });
-        }
-
-        try
-        {
-            await _emailService.SendEmail(invoicePdfData, 2, file, customerEmail, response.Data.VoucherNumber!);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { Message = $"Error al enviar el correo: {ex.Message}" });
-        }
-
         return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
     }
 }
