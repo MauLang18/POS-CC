@@ -120,7 +120,7 @@ public class ReportController : ControllerBase
             VoucherNumber = response.Data.VoucherNumber!,
             InstallmentsCount = response.Data.InstallmentsCount,
             IssueDate = response.Data.IssueDate,
-            DueDate = response.Data.IssueDate.AddDays(15),
+            DueDate = response.Data.IssueDate,
 
             CustomerIdNumber = sale.Data!.CustomerIdNumber,
             CustomerName = sale.Data.CustomerName,
@@ -206,7 +206,7 @@ public class ReportController : ControllerBase
             VoucherNumber = response.Data.VoucherNumber!,
             InstallmentsCount = response.Data.InstallmentsCount,
             IssueDate = response.Data.IssueDate,
-            DueDate = response.Data.IssueDate.AddDays(15),
+            DueDate = response.Data.IssueDate,
 
             CustomerIdNumber = sale.Data!.CustomerIdNumber,
             CustomerName = sale.Data.CustomerName,
