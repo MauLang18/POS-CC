@@ -8,8 +8,11 @@ public static class HealthCheckExtension
 {
     private static readonly string[] DatabaseTags = { "database" };
 
-    public static IServiceCollection AddHealthCheck(this IServiceCollection services, IVaultSecretService vaultSecretService)
+    public static IServiceCollection AddHealthCheck(this IServiceCollection services, IConfiguration configuration)
     {
+        var serviceProvider = services.BuildServiceProvider();
+        var vaultSecretService = serviceProvider.GetRequiredService<IVaultSecretService>();
+
         var secretJson = vaultSecretService.GetSecret("CustomCodeAPI/data/ConnectionStrings").GetAwaiter().GetResult();
         var secretResponse = JsonConvert.DeserializeObject<SecretResponse<ConnectionStringsConfig>>(secretJson);
 
