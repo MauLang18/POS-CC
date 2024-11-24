@@ -16,7 +16,7 @@ pipeline {
     stages {
         /*stage('Ejecutar Pruebas Unitarias') {
             steps {
-                sh 'dotnet test TrackX.Tests/TrackX.Tests.csproj --logger trx'
+                sh 'dotnet test POS.Tests/POS.Tests.csproj --logger trx'
             }
             post {
                 failure {
@@ -30,7 +30,7 @@ pipeline {
         stage('Construcción de Docker') {
             steps {
                 script {
-                    sh "docker build --build-arg VAULT_TOKEN=${VAULT_TOKEN} -f TrackX.Api/Dockerfile -t ${DOCKER_IMAGE} ."
+                    sh "docker build --build-arg VAULT_TOKEN=${VAULT_TOKEN} -f POS.Api/Dockerfile -t ${DOCKER_IMAGE} ."
                 }
             }
         }
