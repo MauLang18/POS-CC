@@ -15,4 +15,5 @@ public class Project : BaseEntity
     public virtual Status Status { get; set; } = null!;
     public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();
     public virtual ICollection<License> Licenses { get; set; } = new List<License>();
+    public virtual ICollection<ProjectDetail> ProjectDetails { get; set; } = new List<ProjectDetail>();
 }

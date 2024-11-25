@@ -2,14 +2,13 @@
 using MediatR;
 using POS.Application.Commons.Bases;
 using POS.Application.Interfaces.Services;
-using POS.Domain.Entities;
 using POS.Utilities.Static;
 using WatchDog;
 using Entity = POS.Domain.Entities;
 
 namespace POS.Application.UseCases.Quote.Commands.CreateCommand;
 
-public class CreateQuoteHandler : IRequestHandler<CreateQuoteCommand,BaseResponse<bool>>
+public class CreateQuoteHandler : IRequestHandler<CreateQuoteCommand, BaseResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -50,5 +49,4 @@ public class CreateQuoteHandler : IRequestHandler<CreateQuoteCommand,BaseRespons
 
         return response;
     }
-
 }

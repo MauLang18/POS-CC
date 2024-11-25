@@ -12,5 +12,11 @@ public class CreateProjectCommand : IRequest<BaseResponse<bool>>
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int StatusId { get; set; }
-    public int State { get; set; }
+    public IEnumerable<CreateProjectDetailCommand> ProjectDetails { get; set; } = null!;
+}
+
+public class CreateProjectDetailCommand
+{
+    public string Requirement { get; set; } = null!;
+    public int StatusId { get; set; }
 }

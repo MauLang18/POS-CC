@@ -34,6 +34,9 @@ public class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, BaseRe
                 return response;
             }
 
+            var projectDetails = await _unitOfWork.ProjectDetail.GetProjectDetailByProjectId(request.ProjectId);
+            project.ProjectDetails = projectDetails.ToList();
+
             response.IsSuccess = true;
             response.Data = _mapper.Map<ProjectByIdResponseDto>(project);
             response.Message = ReplyMessage.MESSAGE_QUERY;

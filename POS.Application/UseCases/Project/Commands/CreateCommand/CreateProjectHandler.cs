@@ -23,19 +23,20 @@ public class CreateProjectHandler : IRequestHandler<CreateProjectCommand, BaseRe
     {
         var response = new BaseResponse<bool>();
 
+        using var transaction = _unitOfWork.BeginTransaction();
+
         try
         {
             var project = _mapper.Map<Entity.Project>(request);
+            project.State = (int)StateTypes.Activo;
 
-            var startDate = DateTime.SpecifyKind(DateTime.Parse(request.StartDate.ToString()), DateTimeKind.Utc);
-            var endDate = DateTime.SpecifyKind(DateTime.Parse(request.EndDate.ToString()), DateTimeKind.Utc);
-
-            project.StartDate = startDate;
-            project.EndDate = endDate;
+            project.StartDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
+            project.EndDate = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);
 
             await _unitOfWork.Project.CreateAsync(project);
             await _unitOfWork.SaveChangesAsync();
 
+            transaction.Commit();
             response.IsSuccess = true;
             response.Message = ReplyMessage.MESSAGE_SAVE;
         }

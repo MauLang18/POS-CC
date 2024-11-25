@@ -20,6 +20,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<ProductService> ProductServices { get; set; }
     public DbSet<Project> Projects { get; set; }
+    public DbSet<ProjectDetail> ProjectDetails { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
     public DbSet<PurchaseDetail> PurchaseDetails { get; set; }
     public DbSet<Quote> Quotes { get; set; }

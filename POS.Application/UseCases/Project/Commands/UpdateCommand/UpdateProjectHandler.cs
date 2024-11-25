@@ -23,20 +23,21 @@ public class UpdateProjectHandler : IRequestHandler<UpdateProjectCommand, BaseRe
     {
         var response = new BaseResponse<bool>();
 
+        using var transaction = _unitOfWork.BeginTransaction();
+
         try
         {
             var project = _mapper.Map<Entity.Project>(request);
+            project.State = (int)StateTypes.Activo;
             project.Id = request.ProjectId;
 
-            var startDate = DateTime.SpecifyKind(DateTime.Parse(request.StartDate.ToString()), DateTimeKind.Utc);
-            var endDate = DateTime.SpecifyKind(DateTime.Parse(request.EndDate.ToString()), DateTimeKind.Utc);
-
-            project.StartDate = startDate;
-            project.EndDate = endDate;
+            project.StartDate = DateTime.SpecifyKind(DateTime.Parse(request.StartDate.ToString()), DateTimeKind.Utc);
+            project.EndDate = DateTime.SpecifyKind(DateTime.Parse(request.EndDate.ToString()), DateTimeKind.Utc);
 
             _unitOfWork.Project.UpdateAsync(project);
             await _unitOfWork.SaveChangesAsync();
 
+            transaction.Commit();
             response.IsSuccess = true;
             response.Message = ReplyMessage.MESSAGE_UPDATE;
         }

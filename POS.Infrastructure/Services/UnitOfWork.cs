@@ -25,6 +25,7 @@ public class UnitOfWork : IUnitOfWork
     private IGenericRepository<PaymentMethod> _paymentMethod = null!;
     private IGenericRepository<ProductService> _productService = null!;
     private IGenericRepository<Project> _project = null!;
+    private IProjectDetailRepository _projectDetail = null!;
     private IGenericRepository<Purchase> _purchase = null!;
     private IPurchaseDetailRepository _purchaseDetail = null!;
     private IGenericRepository<Quote> _quote = null!;
@@ -66,6 +67,8 @@ public class UnitOfWork : IUnitOfWork
     public IGenericRepository<ProductService> ProductService => _productService ?? new GenericRepository<ProductService>(_context);
 
     public IGenericRepository<Project> Project => _project ?? new GenericRepository<Project>(_context);
+
+    public IProjectDetailRepository ProjectDetail => _projectDetail ?? new ProjectDetailRepository(_context);
 
     public IGenericRepository<Purchase> Purchase => _purchase ?? new GenericRepository<Purchase>(_context);
 

@@ -18,6 +18,7 @@ public interface IUnitOfWork : IDisposable
     IGenericRepository<PaymentMethod> PaymentMethod { get; }
     IGenericRepository<ProductService> ProductService { get; }
     IGenericRepository<Project> Project { get; }
+    IProjectDetailRepository ProjectDetail { get; }
     IGenericRepository<Purchase> Purchase { get; }
     IPurchaseDetailRepository PurchaseDetail { get; }
     IGenericRepository<Quote> Quote { get; }

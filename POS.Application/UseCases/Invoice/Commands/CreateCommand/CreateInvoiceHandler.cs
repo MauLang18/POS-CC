@@ -29,8 +29,6 @@ public class CreateInvoiceHandler : IRequestHandler<CreateInvoiceCommand, BaseRe
             if (installmentCount < 1) installmentCount = 1;
 
             var invoices = new List<Entity.Invoice>();
-            var issueDate = DateTime.SpecifyKind(DateTime.Parse(request.IssueDate.ToString()), DateTimeKind.Utc);
-            var paymentDate = DateTime.SpecifyKind(DateTime.Parse(request.PaymentDate.ToString()), DateTimeKind.Utc);
             var sale = _unitOfWork.Sale.GetByIdAsync(request.SaleId);
 
             for (int i = 1; i <= installmentCount; i++)
@@ -44,8 +42,8 @@ public class CreateInvoiceHandler : IRequestHandler<CreateInvoiceCommand, BaseRe
                     StatusId = request.StatusId,
                     VoucherTypeId = request.VoucherTypeId,
                     State = (int)StateTypes.Activo,
-                    IssueDate = issueDate,
-                    PaymentDate = paymentDate,
+                    IssueDate = DateTime.SpecifyKind(DateTime.Parse(request.IssueDate.ToString()), DateTimeKind.Utc),
+                    PaymentDate = DateTime.SpecifyKind(DateTime.Parse(request.PaymentDate.ToString()), DateTimeKind.Utc),
 
                     VoucherNumber = installmentCount > 1
                         ? $"{await _generateCodeService.GenerateCodeInvoice(request.SaleId)}-{i}"
