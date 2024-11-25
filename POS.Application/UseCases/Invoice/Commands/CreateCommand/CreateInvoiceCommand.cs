@@ -10,4 +10,6 @@ public class CreateInvoiceCommand : IRequest<BaseResponse<bool>>
     public int InstallmentsCount { get; set; }
     public int PaymentMethodId { get; set; }
     public int StatusId { get; set; }
+    public DateTime PaymentDate { get; set; }
+    public DateTime IssueDate { get; set; }
 }
