@@ -2,6 +2,7 @@
 using MediatR;
 using POS.Application.Commons.Bases;
 using POS.Application.Interfaces.Services;
+using POS.Domain.Entities;
 using POS.Utilities.Static;
 using WatchDog;
 using Entity = POS.Domain.Entities;
@@ -35,9 +36,15 @@ public class UpdateProjectHandler : IRequestHandler<UpdateProjectCommand, BaseRe
             project.EndDate = DateTime.SpecifyKind(DateTime.Parse(request.EndDate.ToString()), DateTimeKind.Utc);
 
             _unitOfWork.Project.UpdateAsync(project);
+
+            var projectDetails = _mapper.Map<List<ProjectDetail>>(request.ProjectDetails);
+
+            await _unitOfWork.ProjectDetail.UpdateProjectDetails(project.Id, projectDetails);
+
             await _unitOfWork.SaveChangesAsync();
 
             transaction.Commit();
+
             response.IsSuccess = true;
             response.Message = ReplyMessage.MESSAGE_UPDATE;
         }
@@ -49,4 +56,5 @@ public class UpdateProjectHandler : IRequestHandler<UpdateProjectCommand, BaseRe
 
         return response;
     }
+
 }
