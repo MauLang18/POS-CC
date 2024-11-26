@@ -18,5 +18,5 @@ public class CreateProjectCommand : IRequest<BaseResponse<bool>>
 public class CreateProjectDetailCommand
 {
     public string Requirement { get; set; } = null!;
-    public int StatusId { get; set; }
+    public int StateId { get; set; }
 }

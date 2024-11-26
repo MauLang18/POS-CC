@@ -3,5 +3,5 @@
 public class ProjectDetailsByIdResponseDto
 {
     public string? Requirement { get; set; }
-    public int StatusId { get; set; }
+    public int StateId { get; set; }
 }

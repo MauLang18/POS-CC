@@ -19,7 +19,7 @@ public class ProjectDetailConfiguration : IEntityTypeConfiguration<ProjectDetail
             .OnDelete(DeleteBehavior.ClientSetNull);
         builder.HasOne(x => x.Status)
             .WithMany(y => y.ProjectDetails)
-            .HasForeignKey(x => x.StatusId)
+            .HasForeignKey(x => x.StateId)
             .OnDelete(DeleteBehavior.ClientSetNull);
     }
 }
