@@ -30,6 +30,7 @@ public class ProjectMapping : Profile
             .ReverseMap();
 
         CreateMap<ProjectDetail, ProjectDetailsByIdResponseDto>()
+            .ForMember(x => x.StateProject, x => x.MapFrom(y => y.Status.Name))
             .ReverseMap();
 
         CreateMap<CreateProjectCommand, Project>();
