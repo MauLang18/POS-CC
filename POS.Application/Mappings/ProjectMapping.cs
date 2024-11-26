@@ -38,5 +38,7 @@ public class ProjectMapping : Profile
         CreateMap<CreateProjectDetailCommand, ProjectDetail>();
 
         CreateMap<UpdateProjectCommand, Project>();
+
+        CreateMap<UpdateProjectDetailCommand, ProjectDetail>();
     }
 }
