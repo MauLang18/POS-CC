@@ -51,6 +51,7 @@ public class GeneratePdfService : IGeneratePdfService
             }
         }
 
+        // Manejo de las colecciones
         var matches = System.Text.RegularExpressions.Regex.Matches(populatedHtml, @"{{#each\s+(?<CollectionName>\w+)}}(?<Content>.*?){{/each}}", System.Text.RegularExpressions.RegexOptions.Singleline);
 
         foreach (System.Text.RegularExpressions.Match match in matches)
@@ -77,6 +78,11 @@ public class GeneratePdfService : IGeneratePdfService
                 }
 
                 populatedHtml = populatedHtml.Replace(match.Value, collectionHtml.ToString());
+            }
+            else
+            {
+                // Si no se encuentra la colección, eliminamos el bloque de la plantilla
+                populatedHtml = populatedHtml.Replace(match.Value, "");
             }
         }
 

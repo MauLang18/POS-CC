@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using POS.Application.Dtos.Invoice.Response;
 using POS.Application.Dtos.Quote.Response;
+using POS.Application.Dtos.Report.Response;
 using POS.Application.Dtos.Sale.Response;
 using POS.Application.Interfaces.Services;
 using POS.Application.UseCases.Invoice.Queries.GetByIdQuery;
@@ -25,76 +26,162 @@ public class ReportController : ControllerBase
         _emailService = emailService;
     }
 
-    [HttpGet("CotizacionEmail/{quoteId:int}")]
-    public async Task<IActionResult> QuoteEmailPdf(int quoteId)
+    [HttpGet("Download/{id:int}")]
+    public async Task<IActionResult> DownloadPdf(int id, [FromQuery] string reportType, int templateId)
     {
-        var response = await _mediator.Send(new GetQuoteByIdQuery { QuoteId = quoteId });
+        var (isSuccess, data) = await GetReportData(id, reportType);
+        if (!isSuccess || data == null)
+            return NotFound(new { Message = $"No se encontró un reporte de tipo {reportType} con el ID {id}" });
 
-        if (!response.IsSuccess || response.Data == null)
+        // Verificamos si el tipo de data es InvoicePdfDto o QuotePdfDto
+        if (data is InvoicePdfDto invoiceData)
         {
-            return NotFound(new { Message = $"No se encontró una cotización con el ID {quoteId}" });
+            try
+            {
+                byte[] file = await _generatePdfService.GeneratePdf(invoiceData, templateId);
+                return File(file, "application/pdf", $"{invoiceData.VoucherNumber}.pdf");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Error al generar el PDF: {ex.Message}" });
+            }
         }
-
-        byte[] file = await _generatePdfService.GeneratePdf<QuoteByIdResponseDto>(response.Data, 1);
-
-        var customerEmail = response.Data.CustomerEmail;
-        if (string.IsNullOrEmpty(customerEmail))
+        else if (data is QuotePdfDto quoteData)
         {
-            return BadRequest(new { Message = "No se proporcionó un correo electrónico para el cliente." });
+            try
+            {
+                byte[] file = await _generatePdfService.GeneratePdf(quoteData, templateId);
+                return File(file, "application/pdf", $"{quoteData.VoucherNumber}.pdf");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Error al generar el PDF: {ex.Message}" });
+            }
         }
-
-        try
+        else
         {
-            await _emailService.SendEmail(response.Data, 1, file, customerEmail, response.Data.VoucherNumber!);
+            return StatusCode(500, new { Message = "Tipo de reporte no reconocido." });
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { Message = $"Error al enviar el correo: {ex.Message}" });
-        }
-
-        return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
     }
 
-    [HttpGet("Cotizacion/{quoteId:int}")]
-    public async Task<IActionResult> QuotePdf(int quoteId)
+    [HttpGet("SendEmail/{id:int}")]
+    public async Task<IActionResult> SendPdfByEmail(int id, [FromQuery] string reportType, int templateId)
     {
-        var response = await _mediator.Send(new GetQuoteByIdQuery { QuoteId = quoteId });
+        var (isSuccess, data) = await GetReportData(id, reportType);
+        if (!isSuccess || data == null)
+            return NotFound(new { Message = $"No se encontró un reporte de tipo {reportType} con el ID {id}" });
 
-        if (!response.IsSuccess || response.Data == null)
+        // Verificamos si el tipo de data es InvoicePdfDto o QuotePdfDto
+        if (data is InvoicePdfDto invoiceData)
         {
-            return NotFound(new { Message = $"No se encontró una cotización con el ID {quoteId}" });
+            if (string.IsNullOrEmpty(invoiceData.CustomerEmail))
+                return BadRequest(new { Message = "No se proporcionó un correo electrónico para el cliente." });
+
+            try
+            {
+                byte[] file = await _generatePdfService.GeneratePdf(invoiceData, templateId);
+                await _emailService.SendEmail(invoiceData, templateId, file, invoiceData.CustomerEmail!, invoiceData.VoucherNumber!);
+                return Ok(new { Message = "Correo enviado exitosamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Error al enviar el correo: {ex.Message}" });
+            }
         }
+        else if (data is QuotePdfDto quoteData)
+        {
+            if (string.IsNullOrEmpty(quoteData.CustomerEmail))
+                return BadRequest(new { Message = "No se proporcionó un correo electrónico para el cliente." });
 
-        byte[] file = await _generatePdfService.GeneratePdf<QuoteByIdResponseDto>(response.Data, 1);
-
-        return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
+            try
+            {
+                byte[] file = await _generatePdfService.GeneratePdf(quoteData, templateId);
+                await _emailService.SendEmail(quoteData, templateId, file, quoteData.CustomerEmail!, quoteData.VoucherNumber!);
+                return Ok(new { Message = "Correo enviado exitosamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Error al enviar el correo: {ex.Message}" });
+            }
+        }
+        else
+        {
+            return StatusCode(500, new { Message = "Tipo de reporte no reconocido." });
+        }
     }
 
-    [HttpGet("FacturaEmail/{invoiceId:int}")]
-    public async Task<IActionResult> InvoiceEmailPdf(int invoiceId)
+    [HttpGet("ViewPdf/{id:int}")]
+    public async Task<IActionResult> ViewPdf(int id, [FromQuery] string reportType, int templateId)
     {
-        var response = await _mediator.Send(new GetInvoiceByIdQuery { InvoiceId = invoiceId });
-        if (!response.IsSuccess || response.Data == null)
+        var (isSuccess, data) = await GetReportData(id, reportType);
+        if (!isSuccess || data == null)
+            return NotFound(new { Message = $"No se encontró un reporte de tipo {reportType} con el ID {id}" });
+
+        // Verificamos si el tipo de data es InvoicePdfDto o QuotePdfDto
+        if (data is InvoicePdfDto invoiceData)
         {
-            return NotFound(new { Message = $"No se encontró una factura con el ID {invoiceId}" });
+            try
+            {
+                byte[] file = await _generatePdfService.GeneratePdf(invoiceData, templateId);
+                return File(file, "application/pdf"); // Para visualizar directamente en el navegador
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Error al generar el PDF: {ex.Message}" });
+            }
         }
-
-        var sale = await _mediator.Send(new GetSaleByIdQuery { SaleId = response.Data!.SaleId });
-        if (sale == null || sale.Data == null)
+        else if (data is QuotePdfDto quoteData)
         {
-            return NotFound(new { Message = $"No se encontró una venta asociada con la factura ID {invoiceId}" });
+            try
+            {
+                byte[] file = await _generatePdfService.GeneratePdf(quoteData, templateId);
+                return File(file, "application/pdf"); // Para visualizar directamente en el navegador
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Error al generar el PDF: {ex.Message}" });
+            }
         }
+        else
+        {
+            return StatusCode(500, new { Message = "Tipo de reporte no reconocido." });
+        }
+    }
 
-        var installmentsCount = response.Data.InstallmentsCount;
-        if (installmentsCount < 1) installmentsCount = 1;
+    private async Task<(bool isSuccess, object? data)> GetReportData(int id, string reportType)
+    {
+        switch (reportType.ToLower())
+        {
+            case "invoice":
+                var invoiceResponse = await _mediator.Send(new GetInvoiceByIdQuery { InvoiceId = id });
+                if (!invoiceResponse.IsSuccess || invoiceResponse.Data == null)
+                    return (false, null);
 
-        var installmentTotal = Math.Round(sale.Data.Total / installmentsCount, 2);
-        var installmentIVA = Math.Round(sale.Data.IVA / installmentsCount, 2);
-        var installmentSubTotal = Math.Round(sale.Data.SubTotal / installmentsCount, 2);
+                var saleResponse = await _mediator.Send(new GetSaleByIdQuery { SaleId = invoiceResponse.Data.SaleId });
+                if (!saleResponse.IsSuccess || saleResponse.Data == null)
+                    return (false, null);
+
+                return (true, PrepareInvoiceData(invoiceResponse.Data, saleResponse.Data));
+
+            case "quote":
+                var quoteResponse = await _mediator.Send(new GetQuoteByIdQuery { QuoteId = id });
+                if (!quoteResponse.IsSuccess || quoteResponse.Data == null)
+                    return (false, null);
+
+                return (true, PrepareQuoteData(quoteResponse.Data));
+
+            default:
+                return (false, null);
+        }
+    }
+
+    private InvoicePdfDto PrepareInvoiceData(InvoiceByIdResponseDto invoice, SaleByIdResponseDto sale)
+    {
+        var installmentsCount = invoice.InstallmentsCount > 0 ? invoice.InstallmentsCount : 1;
 
         var dividedDetails = new List<SaleDetailsByIdResponseDto>();
 
-        foreach (var detail in sale.Data.SaleDetails)
+        foreach (var detail in sale.SaleDetails)
         {
             int baseQuantity = detail.Quantity / installmentsCount;
             int remainingQuantity = detail.Quantity % installmentsCount;
@@ -115,115 +202,56 @@ public class ReportController : ControllerBase
             remainingQuantity--;
         }
 
-        var invoicePdfData = new InvoicePdfDto
+        return new InvoicePdfDto
         {
-            VoucherNumber = response.Data.VoucherNumber!,
-            InstallmentsCount = response.Data.InstallmentsCount,
-            IssueDate = response.Data.IssueDate,
-            DueDate = response.Data.IssueDate,
-
-            CustomerIdNumber = sale.Data!.CustomerIdNumber,
-            CustomerName = sale.Data.CustomerName,
-            CustomerEmail = sale.Data.CustomerEmail,
-            CustomerAddress = sale.Data.CustomerAddress,
-            CustomerPhone = sale.Data.CustomerPhone,
-            PaymentTerms = sale.Data.PaymentTerms,
-            PaymentMethod = response.Data.PaymentMethod,
-            IVA = installmentIVA,
-            Total = installmentTotal,
-            Observation = sale.Data.Observation,
-            SubTotal = installmentSubTotal,
+            VoucherNumber = invoice.VoucherNumber,
+            InstallmentsCount = installmentsCount,
+            IssueDate = invoice.IssueDate,
+            DueDate = invoice.IssueDate,
+            CustomerIdNumber = sale.CustomerIdNumber,
+            CustomerName = sale.CustomerName,
+            CustomerEmail = sale.CustomerEmail,
+            CustomerAddress = sale.CustomerAddress,
+            CustomerPhone = sale.CustomerPhone,
+            PaymentTerms = sale.PaymentTerms,
+            PaymentMethod = invoice.PaymentMethod,
+            IVA = Math.Round(sale.IVA / installmentsCount, 2),
+            Total = Math.Round(sale.Total / installmentsCount, 2),
+            SubTotal = Math.Round(sale.SubTotal / installmentsCount, 2),
+            Observation = sale.Observation,
             SaleDetails = dividedDetails
         };
-
-        byte[] file = await _generatePdfService.GeneratePdf<InvoicePdfDto>(invoicePdfData, 2);
-
-        var customerEmail = sale.Data.CustomerEmail;
-        if (string.IsNullOrEmpty(customerEmail))
-        {
-            return BadRequest(new { Message = "No se proporcionó un correo electrónico para el cliente." });
-        }
-
-        try
-        {
-            await _emailService.SendEmail(invoicePdfData, 2, file, customerEmail, response.Data.VoucherNumber!);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { Message = $"Error al enviar el correo: {ex.Message}" });
-        }
-
-        return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
     }
 
-    [HttpGet("Factura/{invoiceId:int}")]
-    public async Task<IActionResult> InvoicePdf(int invoiceId)
+    private QuotePdfDto PrepareQuoteData(QuoteByIdResponseDto quote)
     {
-        var response = await _mediator.Send(new GetInvoiceByIdQuery { InvoiceId = invoiceId });
-        if (!response.IsSuccess || response.Data == null)
+        // Asegúrate de que QuoteDetailsByIdResponseDto se convierte a QuoteDetailDto
+        var quoteDetails = quote.QuoteDetails.Select(detail => new QuoteDetailDto
         {
-            return NotFound(new { Message = $"No se encontró una factura con el ID {invoiceId}" });
-        }
+            Name = detail.Name,
+            Code = detail.Code,
+            Price = detail.Price,
+            Quantity = detail.Quantity,
+            Total = detail.Total
+        }).ToList();
 
-        var sale = await _mediator.Send(new GetSaleByIdQuery { SaleId = response.Data!.SaleId });
-        if (sale == null || sale.Data == null)
+        return new QuotePdfDto
         {
-            return NotFound(new { Message = $"No se encontró una venta asociada con la factura ID {invoiceId}" });
-        }
-
-        var installmentsCount = response.Data.InstallmentsCount;
-        if (installmentsCount < 1) installmentsCount = 1;
-
-        var installmentTotal = Math.Round(sale.Data.Total / installmentsCount, 2);
-        var installmentIVA = Math.Round(sale.Data.IVA / installmentsCount, 2);
-        var installmentSubTotal = Math.Round(sale.Data.SubTotal / installmentsCount, 2);
-
-        var dividedDetails = new List<SaleDetailsByIdResponseDto>();
-
-        foreach (var detail in sale.Data.SaleDetails)
-        {
-            int baseQuantity = detail.Quantity / installmentsCount;
-            int remainingQuantity = detail.Quantity % installmentsCount;
-
-            var totalForInstallment = Math.Round(detail.Total / installmentsCount, 2);
-
-            dividedDetails.Add(new SaleDetailsByIdResponseDto
-            {
-                ProductServiceId = detail.ProductServiceId,
-                Image = detail.Image,
-                Code = detail.Code,
-                Name = detail.Name,
-                Quantity = baseQuantity + (remainingQuantity > 0 ? 1 : 0),
-                Price = detail.Price,
-                Total = totalForInstallment
-            });
-
-            remainingQuantity--;
-        }
-
-        var invoicePdfData = new InvoicePdfDto
-        {
-            VoucherNumber = response.Data.VoucherNumber!,
-            InstallmentsCount = response.Data.InstallmentsCount,
-            IssueDate = response.Data.IssueDate,
-            DueDate = response.Data.IssueDate,
-
-            CustomerIdNumber = sale.Data!.CustomerIdNumber,
-            CustomerName = sale.Data.CustomerName,
-            CustomerEmail = sale.Data.CustomerEmail,
-            CustomerAddress = sale.Data.CustomerAddress,
-            CustomerPhone = sale.Data.CustomerPhone,
-            PaymentTerms = sale.Data.PaymentTerms,
-            PaymentMethod = response.Data.PaymentMethod,
-            IVA = installmentIVA,
-            Total = installmentTotal,
-            Observation = sale.Data.Observation,
-            SubTotal = installmentSubTotal,
-            SaleDetails = dividedDetails
+            VoucherNumber = quote.VoucherNumber,
+            AuditCreateDate = quote.AuditCreateDate,
+            CustomerName = quote.CustomerName,
+            RequestedBy = quote.RequestedBy,
+            CustomerEmail = quote.CustomerEmail,
+            CustomerAddress = quote.CustomerAddress,
+            CustomerPhone = quote.CustomerPhone,
+            PaymentTerms = quote.PaymentTerms,
+            PaymentMethod = quote.PaymentMethod,
+            Observation = quote.Observation,
+            SubTotal = quote.SubTotal,
+            IVA = quote.IVA,
+            Discount = quote.Discount,
+            Total = quote.Total,
+            QuoteDetails = quoteDetails
         };
-
-        byte[] file = await _generatePdfService.GeneratePdf<InvoicePdfDto>(invoicePdfData, 2);
-
-        return File(file, "application/pdf", $"{response.Data.VoucherNumber}.pdf");
     }
 }

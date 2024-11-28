@@ -1,30 +1,33 @@
-﻿namespace POS.Application.Dtos.Quote.Response;
+﻿namespace POS.Application.Dtos.Report.Response;
 
-public class QuoteByIdResponseDto
+public class QuotePdfDto
 {
-    public int QuoteId { get; set; }
-    public int VoucherTypeId { get; set; }
+    //Customer
     public string? VoucherNumber { get; set; }
-    public int CustomerId { get; set; }
-
-    // Cliente
+    public string? CustomerIdNumber { get; set; }
     public string? CustomerName { get; set; }
     public string? CustomerEmail { get; set; }
     public string? CustomerAddress { get; set; }
     public string? CustomerPhone { get; set; }
     public string? RequestedBy { get; set; }
     public string? PaymentTerms { get; set; }
-
-
-    public int PaymentMethodId { get; set; }
     public string? PaymentMethod { get; set; }
+
+    //Quote
     public DateTime AuditCreateDate { get; set; }
     public string? Observation { get; set; }
     public decimal SubTotal { get; set; }
-    public int ApplyIVA { get; set; }
     public decimal IVA { get; set; }
     public decimal Discount { get; set; }
     public decimal Total { get; set; }
-    public int StatusId { get; set; }
-    public ICollection<QuoteDetailsByIdResponseDto> QuoteDetails { get; set; } = null!;
+    public ICollection<QuoteDetailDto>? QuoteDetails { get; set; }
+}
+
+public class QuoteDetailDto
+{
+    public string? Name { get; set; }
+    public string? Code { get; set; }
+    public decimal Price { get; set; }
+    public int Quantity { get; set; }
+    public decimal Total { get; set; }
 }

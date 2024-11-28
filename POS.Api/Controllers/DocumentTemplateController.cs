@@ -5,6 +5,7 @@ using POS.Application.UseCases.DocumentTemplate.Commands.DeleteCommand;
 using POS.Application.UseCases.DocumentTemplate.Commands.UpdateCommand;
 using POS.Application.UseCases.DocumentTemplate.Queries.GetAllQuery;
 using POS.Application.UseCases.DocumentTemplate.Queries.GetByIdQuery;
+using POS.Application.UseCases.DocumentTemplate.Queries.GetSelectQuery;
 
 namespace POS.Api.Controllers;
 
@@ -23,6 +24,13 @@ public class DocumentTemplateController : ControllerBase
     public async Task<IActionResult> DocumentTemplateList([FromQuery] GetAllDocumentTemplateQuery query)
     {
         var response = await _mediator.Send(query);
+        return Ok(response);
+    }
+
+    [HttpGet("Select")]
+    public async Task<IActionResult> DocumentTemplateSelect()
+    {
+        var response = await _mediator.Send(new GetSelectDocumentTemplateQuery());
         return Ok(response);
     }
 
