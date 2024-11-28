@@ -123,7 +123,7 @@ public class ReportController : ControllerBase
             try
             {
                 byte[] file = await _generatePdfService.GeneratePdf(invoiceData, templateId);
-                return File(file, "application/pdf"); // Para visualizar directamente en el navegador
+                return File(file, "application/pdf", $"{invoiceData.VoucherNumber}.pdf");
             }
             catch (Exception ex)
             {
@@ -135,7 +135,7 @@ public class ReportController : ControllerBase
             try
             {
                 byte[] file = await _generatePdfService.GeneratePdf(quoteData, templateId);
-                return File(file, "application/pdf"); // Para visualizar directamente en el navegador
+                return File(file, "application/pdf", $"{quoteData.VoucherNumber}.pdf");
             }
             catch (Exception ex)
             {
